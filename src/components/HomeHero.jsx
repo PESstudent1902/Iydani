@@ -486,7 +486,7 @@ export default function HomeHero({ onExploreStudio }) {
       </section>
 
       {/* ── SECTION 2.5: SPOTIFY PLAYER VIEW (Listen to his music) ── */}
-      <section className="w-full py-16 bg-parchment border-t border-charcoal/5 flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">
+      <section className="w-full py-16 bg-transparent border-t border-charcoal/5 flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(42,45,52,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(42,45,52,0.01)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none"></div>
         <div className="relative z-10 max-w-4xl w-full space-y-6 flex flex-col items-center animate-text">
           <div className="space-y-2">
