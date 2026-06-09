@@ -58,14 +58,6 @@ export default function App() {
       if (detailMatch) {
         const id = detailMatch[1]
         
-        // Intercept Professional Music Recording details to display simulated error
-        if (id === 'recording') {
-          window.location.hash = '#recording' // shift hash back
-          setShowRecordingError(true)
-          setActiveService(null)
-          document.body.style.overflow = 'hidden'
-          return
-        }
 
         const found = services.find(s => s.id === id)
         if (found) {
