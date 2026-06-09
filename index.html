@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO and Page Metadata -->
+    <title>IYDANI ENTERTAINMENT — Premium Creative Production Studio</title>
+    <meta name="description" content="IYDANI ENTERTAINMENT is a premium creative production studio. Explore our visual content creation, professional music recording, audio post-production, and chroma-key cinema green screen room services." />
+    <meta name="keywords" content="music recording studio, audio dubbing, final cut pro, cinema green screen, video editing, VFX, chroma key, commercial design" />
+    <meta name="author" content="IYDANI ENTERTAINMENT" />
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="IYDANI ENTERTAINMENT — Premium Creative Production Studio" />
+    <meta property="og:description" content="Premium visual content creation, music recording, audio post-production, and cinematic green screen services in a beautifully choreographed 3D environment." />
+    <meta property="og:type" content="website" />
+    
+    <!-- Google Fonts Connection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Diagnostic Error Overlay -->
+    <div id="error-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; color: #d9534f; padding: 30px; font-family: monospace; font-size: 16px; z-index: 999999; overflow: auto;">
+      <h2 style="margin-top: 0; color: #d9534f; border-bottom: 2px solid #d9534f; padding-bottom: 10px;">Application Runtime Error</h2>
+      <div id="error-message" style="margin-bottom: 20px; font-weight: bold;"></div>
+      <pre id="error-stack" style="background: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px solid #eee; overflow-x: auto;"></pre>
+      <button onclick="location.reload()" style="background: #d9534f; color: white; border: none; padding: 10px 20px; font-family: inherit; font-size: 14px; border-radius: 4px; cursor: pointer;">Reload Page</button>
+    </div>
+    <script>
+      function showDiagnosticError(message, stack) {
+        document.getElementById('error-message').textContent = message;
+        document.getElementById('error-stack').textContent = stack || 'No stack trace available';
+        document.getElementById('error-overlay').style.display = 'block';
+      }
+      window.addEventListener('error', function(e) {
+        showDiagnosticError(e.message + ' (at ' + e.filename + ':' + e.lineno + ')', e.error ? e.error.stack : '');
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        showDiagnosticError('Unhandled Promise Rejection: ' + e.reason, e.reason && e.reason.stack ? e.reason.stack : '');
+      });
+    </script>
+
+    <div id="root">
+      <div style="font-family: sans-serif; text-align: center; padding: 80px 20px; color: #2A2D34; background: #F5F3E9; min-h: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; font-family: Georgia, serif; letter-spacing: 0.05em;">IYDANI ENTERTAINMENT</h2>
+        
+        <!-- Live Protocol Detector -->
+        <div id="protocol-warning" style="display: none; background: #d9534f; color: white; padding: 15px; border-radius: 6px; margin-bottom: 20px; max-width: 500px; text-align: left; font-size: 14px; line-height: 1.5;">
+          <strong>⚠️ Access Protocol Error:</strong> You have opened the index.html file directly via your file explorer (using the <code>file://</code> protocol). The browser blocks security modules in this mode. You must use the local server.
+        </div>
+
+        <p id="loading-instructions" style="font-size: 14px; opacity: 0.8; max-width: 450px; margin: 0 auto 25px; line-height: 1.6;">
+          Connecting to local development server... <br />
+          If this screen remains blank or doesn't load within 3 seconds, please ensure you are visiting <a href="http://localhost:5173/" style="color: #D4A373; font-weight: bold; text-decoration: underline;">http://localhost:5173/</a> in your browser, and that your command terminal running the dev server is still open.
+        </p>
+        <div id="spinner" style="display: inline-block; width: 28px; height: 28px; border: 3px solid #8A9A86; border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite;"></div>
+        <style>
+          @keyframes spin { to { transform: rotate(360deg); } }
+        </style>
+      </div>
+    </div>
+
+    <!-- Script to check protocol -->
+    <script>
+      if (window.location.protocol === 'file:') {
+        document.getElementById('protocol-warning').style.display = 'block';
+        document.getElementById('loading-instructions').style.color = '#d9534f';
+        document.getElementById('loading-instructions').innerHTML = '<strong>Action Required:</strong> Please start the server using the <code>start_studio.bat</code> file, and open <strong><a href="http://localhost:5173/" style="color: #d9534f; text-decoration: underline;">http://localhost:5173/</a></strong> in your browser.';
+        document.getElementById('spinner').style.display = 'none';
+      }
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

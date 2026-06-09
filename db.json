@@ -1,0 +1,42 @@
+{
+  "admin:credentials": {
+    "email": "admin@iyedani.com",
+    "passwordHash": "$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS"
+  },
+  "site:settings": {
+    "logoText": "IYDANI ENTERTAINMENT",
+    "tagline": "Sound, Vision & Immersive Spaces",
+    "description": "Pioneering next-generation audio production, high-end commercial visuals, and virtual VFX cyclorama experiences.",
+    "email": "info@iyedani.com",
+    "phone": "+91 74115 44427",
+    "address": "2nd Floor, 1092/93, 10th C Cross, 11th Main Rd, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086",
+    "youtubeUrl": "https://www.youtube.com/@Iydani_Entertainment",
+    "instagramUrl": "https://www.instagram.com/iydanientertainment/",
+    "linkedinUrl": "https://in.linkedin.com/company/iydani-entertainment",
+    "whatsappUrl": "https://wa.me/9107411544427",
+    "bgVideoUrl": "https://www.youtube.com/embed/Vz36RkM-rX8?autoplay=1&mute=1&loop=1&playlist=Vz36RkM-rX8&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1"
+  },
+  "privacy-policy": "# Privacy Policy\n\nLast updated: June 09, 2026\n\nWe value your privacy. Your contact and career application submissions are securely stored and processed in compliance with modern data security practices. We do not sell or share your personal data with third parties.",
+  "news": [],
+  "releases": [],
+  "jobs": [
+    {
+      "id": "1",
+      "title": "Senior Audio Engineer",
+      "department": "Studios",
+      "type": "Full-time",
+      "location": "Bengaluru",
+      "description": "Seeking a veteran recording & mixing engineer experienced with high-end analog paths."
+    },
+    {
+      "id": "2",
+      "title": "VFX Compositor",
+      "department": "Visual Production",
+      "type": "Full-time",
+      "location": "Bengaluru",
+      "description": "Experienced in green screen keying, camera tracking, and Blender/Nuke."
+    }
+  ],
+  "submissions:contact": [],
+  "submissions:career": []
+}
