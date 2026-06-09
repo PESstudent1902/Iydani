@@ -155,7 +155,7 @@ export default function HomeHero({ onExploreStudio }) {
           {/* Right: Spotify artist player card */}
           <div className="w-full max-w-sm lg:w-[350px] bg-white/10 backdrop-blur-md rounded-3xl border border-charcoal/10 p-2 shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-wood/30 animate-fade-in pointer-events-auto">
             <iframe 
-              src="https://open.spotify.com/embed/artist/06i5vQeOQ9q1nC4rJj2w0z?utm_source=generator&theme=0" 
+              src="https://open.spotify.com/embed/artist/2i6aLQJQqwTbIcyFpQAXGA?utm_source=generator&theme=0" 
               width="100%" 
               height="352" 
               frameBorder="0" 
