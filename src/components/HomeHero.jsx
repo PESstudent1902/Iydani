@@ -111,7 +111,7 @@ export default function HomeHero({ onExploreStudio }) {
     <div className="w-full bg-transparent select-text relative">
       
       {/* ── SECTION 1: HERO VIEW (Background Video + Centered Intro) ── */}
-      <section className="relative w-full min-h-[88vh] flex flex-col justify-center items-center px-6 py-12 lg:py-0 overflow-hidden">
+      <section className="relative w-full h-[88vh] flex flex-col justify-center items-center text-center px-6 overflow-hidden">
         {/* Background YouTube Video Embed */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none bg-black">
           <iframe
@@ -126,44 +126,27 @@ export default function HomeHero({ onExploreStudio }) {
           <div className="absolute inset-0 bg-radial-gradient(ellipse at center, transparent 30%, #F5F3E9 95%) z-1" />
         </div>
 
-        {/* Hero Content: Side-by-side flex layout on desktop */}
-        <div className="relative z-10 max-w-5xl w-full flex flex-col lg:flex-row items-center justify-between gap-10 mt-16 px-4">
-          {/* Left: Typography Content */}
-          <div className="flex-1 text-center lg:text-left space-y-6">
-            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-charcoal font-semibold tracking-wide leading-tight drop-shadow-sm">
-              Dr. Hamsalekha
-            </h1>
-            <span className="font-body text-sm md:text-base tracking-[0.2em] text-wood-dark font-semibold uppercase block -mt-2">
-              Naada Brahma &bull; Composer &bull; Lyricist
-            </span>
-            <p className="font-body text-charcoal-light text-base md:text-lg leading-relaxed font-light max-w-xl mx-auto lg:mx-0 drop-shadow-sm">
-              Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.
-            </p>
+        {/* Centered Typography Content */}
+        <div className="relative z-10 max-w-3xl space-y-6 animate-fade-in mt-12 px-4">
+          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-charcoal font-semibold tracking-wide leading-tight drop-shadow-sm">
+            Dr. Hamsalekha
+          </h1>
+          <span className="font-body text-sm md:text-base tracking-[0.2em] text-wood-dark font-semibold uppercase block -mt-2">
+            Naada Brahma &bull; Composer &bull; Lyricist
+          </span>
+          <p className="font-body text-charcoal-light text-base md:text-lg leading-relaxed font-light max-w-xl mx-auto drop-shadow-sm">
+            Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.
+          </p>
 
-            {/* Action button to explore the 3D Studio */}
-            <div className="pt-2">
-              <button 
-                onClick={onExploreStudio}
-                className="group relative inline-flex items-center gap-3 bg-charcoal text-parchment hover:bg-wood hover:text-charcoal-dark font-body text-xs tracking-widest px-6 py-3.5 rounded-full transition-all duration-300 font-bold uppercase shadow-sm pointer-events-auto cursor-pointer"
-              >
-                <span>Explore Studio</span>
-                <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">&rarr;</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Right: Spotify artist player card */}
-          <div className="w-full max-w-sm lg:w-[350px] bg-white/10 backdrop-blur-md rounded-3xl border border-charcoal/10 p-2 shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:border-wood/30 animate-fade-in pointer-events-auto">
-            <iframe 
-              src="https://open.spotify.com/embed/artist/2i6aLQJQqwTbIcyFpQAXGA?utm_source=generator&theme=0" 
-              width="100%" 
-              height="352" 
-              frameBorder="0" 
-              allowFullScreen="" 
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-              loading="lazy"
-              className="rounded-2xl shadow-inner"
-            ></iframe>
+          {/* Action button to explore the 3D Studio */}
+          <div className="pt-2">
+            <button 
+              onClick={onExploreStudio}
+              className="group relative inline-flex items-center gap-3 bg-charcoal text-parchment hover:bg-wood hover:text-charcoal-dark font-body text-xs tracking-widest px-6 py-3.5 rounded-full transition-all duration-300 font-bold uppercase shadow-sm pointer-events-auto cursor-pointer"
+            >
+              <span>Explore Studio</span>
+              <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">&rarr;</span>
+            </button>
           </div>
         </div>
       </section>
@@ -499,6 +482,37 @@ export default function HomeHero({ onExploreStudio }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
+        </div>
+      </section>
+
+      {/* ── SECTION 2.5: SPOTIFY PLAYER VIEW (Listen to his music) ── */}
+      <section className="w-full py-16 bg-parchment border-t border-charcoal/5 flex flex-col items-center justify-center text-center px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(42,45,52,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(42,45,52,0.01)_1px,transparent_1px)] [background-size:40px_40px] pointer-events-none"></div>
+        <div className="relative z-10 max-w-4xl w-full space-y-6 flex flex-col items-center animate-text">
+          <div className="space-y-2">
+            <span className="font-body text-xs tracking-[0.25em] text-sage font-bold uppercase block">
+              Digital Discography
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl text-charcoal font-bold tracking-wide">
+              Listen on Spotify
+            </h2>
+            <p className="font-body text-sm text-charcoal-light font-light max-w-xl mx-auto leading-relaxed">
+              Stream Dr. Hamsalekha's legendary film scores, romantic classics, and revolutionary compositions directly from his official Spotify artist profile.
+            </p>
+          </div>
+
+          <div className="w-full max-w-2xl bg-white/60 backdrop-blur-md border border-charcoal/10 p-2.5 rounded-3xl shadow-xl transition-all duration-500 hover:scale-[1.01] hover:border-wood/30 pointer-events-auto">
+            <iframe 
+              src="https://open.spotify.com/embed/artist/2i6aLQJQqwTbIcyFpQAXGA?utm_source=generator&theme=0" 
+              width="100%" 
+              height="380" 
+              frameBorder="0" 
+              allowFullScreen="" 
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+              loading="lazy"
+              className="rounded-2xl"
+            ></iframe>
+          </div>
         </div>
       </section>
 
