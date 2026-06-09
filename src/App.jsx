@@ -259,14 +259,14 @@ export default function App() {
               <p className="font-bold text-base md:text-lg">
                 Uncaught Technical Exception: Decibel threshold exceeded standard safety limits (Acoustic Overload)
               </p>
-              <p className="text-xs text-charcoal-light leading-relaxed">
+              <p className="text-xs text-[#3D4149] leading-relaxed">
                 The Neumann U87 Ai condenser microphone locker and the Neve 1073 preamplifier signal path detected input signals exceeding +24dBu, triggering safety shutdowns to prevent transducer damage.
               </p>
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase text-charcoal/40">Diagnostic Stack Trace:</span>
-              <pre className="bg-charcoal-dark text-parchment-light p-5 rounded-lg text-[10px] md:text-xs overflow-x-auto leading-relaxed shadow-inner">
+              <span className="text-xs font-bold uppercase text-[#2A2D34]/40">Diagnostic Stack Trace:</span>
+              <pre className="bg-[#1A1C21] text-parchment-light p-5 rounded-lg text-[10px] md:text-xs overflow-x-auto leading-relaxed shadow-inner">
 {`Error: Input level reached +28.4dBu (clipping limit +24dBu)
     at Preamplifier.Neve1073.gainStage (hardware_locker.js:142:9)
     at SignalPath.AnalogSignal.process (signal_chain.js:84:18)
@@ -278,7 +278,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row gap-4 border-t border-charcoal/10">
+          <div className="pt-8 flex flex-col sm:flex-row gap-4 border-t border-[#2A2D34]/10">
             <button 
               onClick={() => {
                 setShowRecordingError(false)
@@ -294,7 +294,7 @@ export default function App() {
                 document.body.style.overflow = ''
                 handlePageChange('legend')
               }}
-              className="px-8 py-3 border border-charcoal/20 text-charcoal-light hover:text-charcoal hover:bg-charcoal/5 font-bold text-xs tracking-widest uppercase rounded-md transition-colors duration-300 pointer-events-auto cursor-pointer"
+              className="px-8 py-3 border border-[#2A2D34]/20 text-[#3D4149] hover:text-[#2A2D34] hover:bg-[#2A2D34]/5 font-bold text-xs tracking-widest uppercase rounded-md transition-colors duration-300 pointer-events-auto cursor-pointer"
             >
               Return to Legend Page
             </button>
