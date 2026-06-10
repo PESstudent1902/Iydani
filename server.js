@@ -45,7 +45,7 @@ function initLocalDb() {
       'site:settings': {
         logoText: 'IYDANI ENTERTAINMENT',
         tagline: 'Sound, Vision & Immersive Spaces',
-        description: 'Pioneering next-generation audio production, high-end commercial visuals, and virtual VFX cyclorama experiences.',
+        description: 'Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.',
         email: 'info@iyedani.com',
         phone: '+91 74115 44427',
         address: '2nd Floor, 1092/93, 10th C Cross, 11th Main Rd, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086',
@@ -53,11 +53,108 @@ function initLocalDb() {
         instagramUrl: 'https://www.instagram.com/iydanientertainment/',
         linkedinUrl: 'https://in.linkedin.com/company/iydani-entertainment',
         whatsappUrl: 'https://wa.me/9107411544427',
-        bgVideoUrl: 'https://www.youtube.com/embed/Vz36RkM-rX8?autoplay=1&mute=1&loop=1&playlist=Vz36RkM-rX8&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1'
+        bgVideoUrl: 'https://www.youtube.com/embed/ohnsL3gubkw?autoplay=1&mute=1&loop=1&playlist=ohnsL3gubkw&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1',
+        aboutText1: 'IYDANI ENTERTAINMENT is the golden dream envisioned by Dr. Hamsalekha, He is a great visionary, musician, lyricist, artist, performer, singer, instrumentalist, composer, educationist, philanthropist, socialist, patron of literature and art, teacher and a marvelous human being.',
+        aboutText2: 'Apart from him being always recognized with the film industry he is the visionary who dreamt of having a systematic study pattern for Indian Folk Music in India. To safeguard and promote DESI culture he endorsed Desi Notations to help learn Indian Music better. Driven by ambition, he put forth several ideas which went into creating their own record label Hamsalekha Strings & Iydani Entertainment.',
+        aboutImage: '/iydani_logo.png',
+        team: [
+          {
+            name: 'Iydani Founder',
+            role: 'Founder & CEO',
+            bio: 'Visionary entrepreneur driving the integration of classic musical heritage with state-of-the-art cinematic technology.',
+            initials: 'IF',
+            image: ''
+          },
+          {
+            name: 'Dr. Hamsalekha',
+            role: 'Creative Mentor & Advisory Head',
+            bio: 'Naada Brahma of Kannada cinema, shaping the acoustic philosophy and artistic standards of the studio.',
+            initials: 'DH',
+            image: ''
+          },
+          {
+            name: 'Technical Director',
+            role: 'Head of Sound & VFX',
+            bio: 'A veteran engineer with over 15 years of experience setting up premium recording chains and virtual productions.',
+            initials: 'TD',
+            image: ''
+          }
+        ],
+        entertainmentServices: [
+          {
+            title: 'Film Production',
+            desc: 'End-to-end cinema production from script development and pre-visualization to filming, VFX, and theater packaging.',
+            icon: '🎬'
+          },
+          {
+            title: 'Music Production',
+            desc: 'Full songwriting, arranging, tracking, and mixing with legendary director mentorship for albums and movie soundtracks.',
+            icon: '🎵'
+          },
+          {
+            title: 'Music Distribution & Label',
+            desc: 'Seamless publishing across major streaming platforms worldwide (Spotify, Apple Music, JioSaavn) under the Iydani Audio Label.',
+            icon: '💿'
+          },
+          {
+            title: 'Artist Management',
+            desc: 'Mentoring rising vocalists and composers, booking gigs, setting up licensing deals, and guiding media careers.',
+            icon: '👑'
+          },
+          {
+            title: 'Digital Content Creation',
+            desc: 'Premium brand campaigns, high-end promotional videos, motion assets, and commercial layouts.',
+            icon: '📱'
+          }
+        ],
+        studioServices: [
+          {
+            title: 'Acoustic Tracking & Recording',
+            desc: 'Premium tracking room optimized for live drums, string ensembles, and vocal capture with Class-A analog chains.',
+            icon: '🎙️'
+          },
+          {
+            title: 'Dubbing & Dialogue Replacement',
+            desc: 'Sound-isolated ADR suites with precise timecode sync for movie and commercial language localization.',
+            icon: '🎧'
+          },
+          {
+            title: 'Cinematic Color Grading',
+            desc: 'DaVinci Resolve color-grading suite with D65 lighting and reference monitors for UHD/HDR master exports.',
+            icon: '🎨'
+          },
+          {
+            title: 'Cinema Green Screen Studio',
+            desc: 'Pre-lit cyclorama chroma key space with high-CRI panels, dolly track systems, and virtual tracking overlays.',
+            icon: '🟩'
+          },
+          {
+            title: 'Dolby Atmos Mixing & Post',
+            desc: 'Spatial audio mix room optimized for cinema standard surround mixes, audio cleanup, and sound design.',
+            icon: '🔊'
+          }
+        ]
       },
       'privacy-policy': '# Privacy Policy\n\nLast updated: June 09, 2026\n\nWe value your privacy. Your contact and career application submissions are securely stored and processed in compliance with modern data security practices. We do not sell or share your personal data with third parties.',
       'news': [],
-      'releases': [],
+      'releases': [
+        {
+          id: '1',
+          title: 'Premaloka Remastered',
+          artist: 'Hamsalekha',
+          genre: 'Soundtrack',
+          releaseDate: '2026-05-15',
+          image: ''
+        },
+        {
+          id: '2',
+          title: 'Agumbeya Sanje (Lofi Mix)',
+          artist: 'Various Artists',
+          genre: 'Lofi Fusion',
+          releaseDate: '2026-06-01',
+          image: ''
+        }
+      ],
       'jobs': [
         { id: '1', title: 'Senior Audio Engineer', department: 'Studios', type: 'Full-time', location: 'Bengaluru', description: 'Seeking a veteran recording & mixing engineer experienced with high-end analog paths.' },
         { id: '2', title: 'VFX Compositor', department: 'Visual Production', type: 'Full-time', location: 'Bengaluru', description: 'Experienced in green screen keying, camera tracking, and Blender/Nuke.' }
@@ -170,6 +267,32 @@ const upload = multer({
 // ──────────────────────────────────────────────────────────────────
 // API ROUTES
 // ──────────────────────────────────────────────────────────────────
+
+// Home Route / Health check / Navigation Guide
+app.get('/', (req, res) => {
+  res.send(`
+    <html>
+      <head>
+        <title>Iydani Backend Server</title>
+      </head>
+      <body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #FAF9F4; color: #2A2D34; text-align: center;">
+        <div>
+          <h1 style="font-size: 2.2rem; margin-bottom: 10px; font-weight: 700;">Iydani Backend API Server</h1>
+          <p style="font-size: 1.1rem; color: #6C7D7F; margin-bottom: 25px;">The server is running successfully on port ${PORT}.</p>
+          <div style="background: white; border: 1px solid rgba(42,45,52,0.1); padding: 25px; border-radius: 16px; max-width: 500px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin: 0 auto;">
+            <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 1.05rem;">To access the Admin Panel:</p>
+            <p style="margin: 0; font-size: 0.95rem; line-height: 1.5; color: #3D4149;">
+              Go to the main website at 
+              <a href="http://localhost:5173" style="color: #c5a880; font-weight: bold; text-decoration: none;">http://localhost:5173</a> 
+              and click the top-left logo <strong>5 times</strong>, or visit 
+              <a href="http://localhost:5173/#/admin" style="color: #c5a880; font-weight: bold; text-decoration: none;">http://localhost:5173/#/admin</a> directly.
+            </p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `);
+});
 
 // 1. AUTH
 app.post('/api/auth/login', async (req, res) => {
@@ -313,6 +436,30 @@ app.get('/api/submissions/career', verifyAdmin, async (req, res) => {
     res.json(subs);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch career applications.' });
+  }
+});
+
+app.delete('/api/submissions/career/:id', verifyAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const subs = await dbGet('submissions:career') || [];
+    const updated = subs.filter(sub => sub.id !== id);
+    await dbSet('submissions:career', updated);
+    res.json({ success: true, message: 'Application deleted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete application.' });
+  }
+});
+
+app.delete('/api/submissions/contact/:id', verifyAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const subs = await dbGet('submissions:contact') || [];
+    const updated = subs.filter(sub => sub.id !== id);
+    await dbSet('submissions:contact', updated);
+    res.json({ success: true, message: 'Inquiry deleted.' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete contact inquiry.' });
   }
 });
 

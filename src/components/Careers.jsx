@@ -231,7 +231,7 @@ export default function Careers() {
                 <div className="flex items-center gap-2">
                   <span className="font-body text-[9px] uppercase tracking-wider text-sage font-bold">Or Paste URL:</span>
                   <input 
-                    type="url" 
+                    type="text" 
                     value={form.resumeUrl}
                     onChange={e => setForm({...form, resumeUrl: e.target.value})}
                     placeholder="Link to hosted resume"

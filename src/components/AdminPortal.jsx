@@ -7,9 +7,9 @@ export default function AdminPortal() {
   const [loginError, setLoginError] = useState(null);
   const [activeTab, setActiveTab] = useState('settings');
 
-  // Core settings & data states
   const [settings, setSettings] = useState({
-    logoText: '', tagline: '', description: '', email: '', phone: '', address: '', youtubeUrl: '', instagramUrl: '', linkedinUrl: '', whatsappUrl: '', bgVideoUrl: ''
+    logoText: '', tagline: '', description: '', email: '', phone: '', address: '', youtubeUrl: '', instagramUrl: '', linkedinUrl: '', whatsappUrl: '', bgVideoUrl: '',
+    aboutText1: '', aboutText2: '', aboutImage: '', team: [], entertainmentServices: [], studioServices: []
   });
   const [contactSubs, setContactSubs] = useState([]);
   const [careerSubs, setCareerSubs] = useState([]);
@@ -146,6 +146,47 @@ export default function AdminPortal() {
       .catch(() => showNotice('error', 'Network error.'));
   };
 
+  const handleTeamChange = (index, field, value) => {
+    setSettings(prev => {
+      const updatedTeam = [...(prev.team || [])];
+      while (updatedTeam.length <= index) {
+        updatedTeam.push({ name: '', role: '', bio: '', initials: '', image: '' });
+      }
+      updatedTeam[index] = { ...updatedTeam[index], [field]: value };
+      return { ...prev, team: updatedTeam };
+    });
+  };
+
+  const handleServiceChange = (category, index, field, value) => {
+    setSettings(prev => {
+      const listKey = category === 'entertainment' ? 'entertainmentServices' : 'studioServices';
+      const updatedList = [...(prev[listKey] || [])];
+      while (updatedList.length <= index) {
+        updatedList.push({ title: '', desc: '', icon: '' });
+      }
+      updatedList[index] = { ...updatedList[index], [field]: value };
+      return { ...prev, [listKey]: updatedList };
+    });
+  };
+
+  const addService = (category) => {
+    setSettings(prev => {
+      const listKey = category === 'entertainment' ? 'entertainmentServices' : 'studioServices';
+      const updatedList = [...(prev[listKey] || [])];
+      updatedList.push({ title: 'New Service', desc: 'Service description...', icon: '⭐' });
+      return { ...prev, [listKey]: updatedList };
+    });
+  };
+
+  const removeService = (category, index) => {
+    if (!confirm('Are you sure you want to remove this service?')) return;
+    setSettings(prev => {
+      const listKey = category === 'entertainment' ? 'entertainmentServices' : 'studioServices';
+      const updatedList = (prev[listKey] || []).filter((_, i) => i !== index);
+      return { ...prev, [listKey]: updatedList };
+    });
+  };
+
   // Change Password
   const changePassword = (e) => {
     e.preventDefault();
@@ -254,6 +295,42 @@ export default function AdminPortal() {
           showNotice('success', 'Job opening deleted.');
         }
       });
+  };
+
+  const deleteCareerSub = (id) => {
+    if (!confirm('Are you sure you want to delete this job application?')) return;
+    fetch(`/api/submissions/career/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setCareerSubs(prev => prev.filter(item => item.id !== id));
+          showNotice('success', 'Job application deleted.');
+        } else {
+          showNotice('error', data.error || 'Failed to delete application.');
+        }
+      })
+      .catch(() => showNotice('error', 'Network error.'));
+  };
+
+  const deleteContactSub = (id) => {
+    if (!confirm('Are you sure you want to delete this contact enquiry?')) return;
+    fetch(`/api/submissions/contact/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setContactSubs(prev => prev.filter(item => item.id !== id));
+          showNotice('success', 'Contact enquiry deleted.');
+        } else {
+          showNotice('error', data.error || 'Failed to delete contact enquiry.');
+        }
+      })
+      .catch(() => showNotice('error', 'Network error.'));
   };
 
   // Create handlers
@@ -477,6 +554,150 @@ export default function AdminPortal() {
                 </div>
               </div>
 
+              <h2 className="font-heading text-xl text-charcoal font-bold tracking-wider border-b border-charcoal/5 pt-4 pb-2">About Page Content</h2>
+              
+              <div className="space-y-1">
+                <label className="font-body text-[9px] tracking-wider uppercase font-bold text-charcoal-light">About Us - Paragraph 1</label>
+                <textarea rows="3" value={settings.aboutText1 || ''} onChange={e => setSettings({...settings, aboutText1: e.target.value})} className="w-full px-3 py-2 bg-white border border-charcoal/10 rounded-lg font-body text-xs text-charcoal focus:border-wood focus:outline-none"></textarea>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-body text-[9px] tracking-wider uppercase font-bold text-charcoal-light">About Us - Paragraph 2</label>
+                <textarea rows="3" value={settings.aboutText2 || ''} onChange={e => setSettings({...settings, aboutText2: e.target.value})} className="w-full px-3 py-2 bg-white border border-charcoal/10 rounded-lg font-body text-xs text-charcoal focus:border-wood focus:outline-none"></textarea>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-body text-[9px] tracking-wider uppercase font-bold text-charcoal-light">About Image Upload / URL</label>
+                <div className="flex flex-col gap-2">
+                  <input type="file" accept="image/*" onChange={e => uploadFile(e.target.files[0], (url) => setSettings({...settings, aboutImage: url}))} className="font-body text-xs text-charcoal-light file:py-1 file:px-3 file:rounded-full file:bg-wood/10 file:text-wood file:border-0 cursor-pointer" />
+                  <input type="text" value={settings.aboutImage || ''} onChange={e => setSettings({...settings, aboutImage: e.target.value})} placeholder="Pasted image URL or relative path" className="w-full px-3 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                </div>
+              </div>
+
+              <h2 className="font-heading text-xl text-charcoal font-bold tracking-wider border-b border-charcoal/5 pt-4 pb-2">Leadership Team Configuration</h2>
+              
+              {[0, 1, 2].map((idx) => {
+                const member = (settings.team && settings.team[idx]) || { name: '', role: '', bio: '', initials: '', image: '' };
+                const roles = ['Founder & CEO', 'Creative Mentor & Advisory Head', 'Head of Sound & VFX'];
+                return (
+                  <div key={idx} className="bg-white/40 border border-charcoal/5 p-4 rounded-xl space-y-3">
+                    <h4 className="font-heading text-xs text-charcoal font-bold">{roles[idx]}</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Name</label>
+                        <input type="text" value={member.name || ''} onChange={e => handleTeamChange(idx, 'name', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Role Title</label>
+                        <input type="text" value={member.role || ''} onChange={e => handleTeamChange(idx, 'role', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Initials</label>
+                        <input type="text" value={member.initials || ''} onChange={e => handleTeamChange(idx, 'initials', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Biography</label>
+                      <textarea rows="2" value={member.bio || ''} onChange={e => handleTeamChange(idx, 'bio', e.target.value)} className="w-full px-2 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Photo Image (Upload or relative path)</label>
+                      <div className="flex flex-col sm:flex-row gap-2 items-center">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          onChange={e => {
+                            if (e.target.files && e.target.files[0]) {
+                              uploadFile(e.target.files[0], (url) => handleTeamChange(idx, 'image', url));
+                            }
+                          }} 
+                          className="font-body text-[10px] text-charcoal-light file:py-0.5 file:px-2 file:rounded-full file:bg-wood/10 file:text-wood file:border-0 cursor-pointer w-full sm:w-auto" 
+                        />
+                        <input 
+                          type="text" 
+                          value={member.image || ''} 
+                          onChange={e => handleTeamChange(idx, 'image', e.target.value)} 
+                          placeholder="Image URL or relative path (e.g. /uploads/file-123.jpg)" 
+                          className="flex-1 px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px] w-full focus:outline-none" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              <h2 className="font-heading text-xl text-charcoal font-bold tracking-wider border-b border-charcoal/5 pt-4 pb-2">Entertainment Services</h2>
+              <div className="space-y-4">
+                {(settings.entertainmentServices || []).map((service, idx) => (
+                  <div key={idx} className="bg-white/40 border border-charcoal/5 p-4 rounded-xl space-y-3 relative">
+                    <button 
+                      type="button" 
+                      onClick={() => removeService('entertainment', idx)} 
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="space-y-1 col-span-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Icon (Emoji/Character)</label>
+                        <input type="text" value={service.icon || ''} onChange={e => handleServiceChange('entertainment', idx, 'icon', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1 col-span-2">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Service Title</label>
+                        <input type="text" value={service.title || ''} onChange={e => handleServiceChange('entertainment', idx, 'title', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Description</label>
+                      <textarea rows="2" value={service.desc || ''} onChange={e => handleServiceChange('entertainment', idx, 'desc', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  type="button" 
+                  onClick={() => addService('entertainment')}
+                  className="px-4 py-1.5 bg-sage/10 text-sage hover:bg-sage/20 font-body text-[10px] tracking-wider uppercase font-bold rounded-md transition-colors cursor-pointer"
+                >
+                  + Add Entertainment Service
+                </button>
+              </div>
+
+              <h2 className="font-heading text-xl text-charcoal font-bold tracking-wider border-b border-charcoal/5 pt-4 pb-2">Studio & Production Services</h2>
+              <div className="space-y-4">
+                {(settings.studioServices || []).map((service, idx) => (
+                  <div key={idx} className="bg-white/40 border border-charcoal/5 p-4 rounded-xl space-y-3 relative">
+                    <button 
+                      type="button" 
+                      onClick={() => removeService('studio', idx)} 
+                      className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-xs uppercase cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="space-y-1 col-span-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Icon (Emoji/Character)</label>
+                        <input type="text" value={service.icon || ''} onChange={e => handleServiceChange('studio', idx, 'icon', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1 col-span-2">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Service Title</label>
+                        <input type="text" value={service.title || ''} onChange={e => handleServiceChange('studio', idx, 'title', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Description</label>
+                      <textarea rows="2" value={service.desc || ''} onChange={e => handleServiceChange('studio', idx, 'desc', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                    </div>
+                  </div>
+                ))}
+                <button 
+                  type="button" 
+                  onClick={() => addService('studio')}
+                  className="px-4 py-1.5 bg-sage/10 text-sage hover:bg-sage/20 font-body text-[10px] tracking-wider uppercase font-bold rounded-md transition-colors cursor-pointer"
+                >
+                  + Add Studio & Production Service
+                </button>
+              </div>
+
               <button type="submit" className="px-6 py-2.5 bg-wood text-white hover:bg-wood-dark font-body text-xs tracking-widest uppercase font-bold rounded-lg cursor-pointer transition-colors duration-300">
                 Save Global Config
               </button>
@@ -520,6 +741,7 @@ export default function AdminPortal() {
                         <th className="py-2.5 px-3">Name</th>
                         <th className="py-2.5 px-3">Email</th>
                         <th className="py-2.5 px-3">Inquiry Details</th>
+                        <th className="py-2.5 px-3">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-charcoal/5">
@@ -529,6 +751,14 @@ export default function AdminPortal() {
                           <td className="py-3 px-3 font-bold text-charcoal">{sub.name}</td>
                           <td className="py-3 px-3">{sub.email}</td>
                           <td className="py-3 px-3 whitespace-pre-wrap">{sub.message}</td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <button 
+                              onClick={() => deleteContactSub(sub.id)} 
+                              className="px-2.5 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded font-body text-[10px] font-bold uppercase transition-all cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -553,6 +783,7 @@ export default function AdminPortal() {
                         <th className="py-2.5 px-3">Applicant</th>
                         <th className="py-2.5 px-3">Resume</th>
                         <th className="py-2.5 px-3">Cover Letter Note</th>
+                        <th className="py-2.5 px-3">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-charcoal/5">
@@ -574,6 +805,14 @@ export default function AdminPortal() {
                             )}
                           </td>
                           <td className="py-3 px-3 whitespace-pre-wrap">{sub.coverLetter}</td>
+                          <td className="py-3 px-3 whitespace-nowrap">
+                            <button 
+                              onClick={() => deleteCareerSub(sub.id)} 
+                              className="px-2.5 py-1 bg-red-100 text-red-700 hover:bg-red-200 rounded font-body text-[10px] font-bold uppercase transition-all cursor-pointer"
+                            >
+                              Delete
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -608,7 +847,7 @@ export default function AdminPortal() {
                 <label className="font-body text-[9px] tracking-wider uppercase font-bold text-charcoal-light">Image Upload / URL</label>
                 <div className="flex flex-col gap-2">
                   <input type="file" accept="image/*" onChange={e => uploadFile(e.target.files[0], (url) => setNewNews({...newNews, image: url}))} className="font-body text-xs text-charcoal-light file:py-1 file:px-3 file:rounded-full file:bg-wood/10 file:text-wood file:border-0 hover:file:bg-wood/20 cursor-pointer" />
-                  <input type="url" value={newNews.image} onChange={e => setNewNews({...newNews, image: e.target.value})} placeholder="Pasted image URL" className="w-full px-3 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                  <input type="text" value={newNews.image} onChange={e => setNewNews({...newNews, image: e.target.value})} placeholder="Pasted image URL or relative path" className="w-full px-3 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
                 </div>
               </div>
               <div className="space-y-1">
@@ -664,7 +903,7 @@ export default function AdminPortal() {
                 <label className="font-body text-[9px] tracking-wider uppercase font-bold text-charcoal-light">Cover Image Upload/URL</label>
                 <div className="flex flex-col gap-2">
                   <input type="file" accept="image/*" onChange={e => uploadFile(e.target.files[0], (url) => setNewRelease({...newRelease, image: url}))} className="font-body text-xs text-charcoal-light file:py-1 file:px-3 file:rounded-full file:bg-wood/10 file:text-wood file:border-0 cursor-pointer" />
-                  <input type="url" value={newRelease.image} onChange={e => setNewRelease({...newRelease, image: e.target.value})} placeholder="Pasted image URL" className="w-full px-3 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                  <input type="text" value={newRelease.image} onChange={e => setNewRelease({...newRelease, image: e.target.value})} placeholder="Pasted image URL or relative path" className="w-full px-3 py-1.5 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
                 </div>
               </div>
               <div className="space-y-1">

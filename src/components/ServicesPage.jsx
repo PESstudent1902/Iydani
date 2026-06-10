@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function ServicesPage() {
   const [activeTab, setActiveTab] = useState('entertainment');
 
-  const entertainmentServices = [
+  const [entertainmentServices, setEntertainmentServices] = useState([
     {
       title: 'Film Production',
       desc: 'End-to-end cinema production from script development and pre-visualization to filming, VFX, and theater packaging.',
@@ -29,9 +29,9 @@ export default function ServicesPage() {
       desc: 'Premium brand campaigns, high-end promotional videos, motion assets, and commercial layouts.',
       icon: '📱'
     }
-  ];
+  ]);
 
-  const studioServices = [
+  const [studioServices, setStudioServices] = useState([
     {
       title: 'Acoustic Tracking & Recording',
       desc: 'Premium tracking room optimized for live drums, string ensembles, and vocal capture with Class-A analog chains.',
@@ -57,7 +57,23 @@ export default function ServicesPage() {
       desc: 'Spatial audio mix room optimized for cinema standard surround mixes, audio cleanup, and sound design.',
       icon: '🔊'
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          if (data.entertainmentServices && Array.isArray(data.entertainmentServices) && data.entertainmentServices.length > 0) {
+            setEntertainmentServices(data.entertainmentServices);
+          }
+          if (data.studioServices && Array.isArray(data.studioServices) && data.studioServices.length > 0) {
+            setStudioServices(data.studioServices);
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   const currentList = activeTab === 'entertainment' ? entertainmentServices : studioServices;
 

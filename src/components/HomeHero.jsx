@@ -6,6 +6,62 @@ export default function HomeHero({ onExploreStudio }) {
   const [activeSong, setActiveSong] = useState(null)
   const [selectedWork, setSelectedWork] = useState(null)
   const [hoveredCard, setHoveredCard] = useState(null)
+  const [videoUrl, setVideoUrl] = useState('')
+  const [description, setDescription] = useState('Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.')
+
+  // Helper to parse YouTube URLs into direct loop-ready embeds
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return ''
+    const fallbackId = 'ohnsL3gubkw'
+    let videoId = ''
+    try {
+      if (url.includes('youtube.com/embed/')) {
+        const match = url.match(/embed\/([^?#\s]+)/)
+        if (match) videoId = match[1]
+      } else if (url.includes('youtube.com/watch')) {
+        const urlObj = new URL(url)
+        videoId = urlObj.searchParams.get('v')
+      } else if (url.includes('youtu.be/')) {
+        const match = url.match(/youtu\.be\/([^?#\s]+)/)
+        if (match) videoId = match[1]
+      } else if (url.includes('youtube.com/shorts/')) {
+        const match = url.match(/shorts\/([^?#\s]+)/)
+        if (match) videoId = match[1]
+      }
+    } catch (e) {
+      console.error('Error parsing YouTube URL:', e)
+    }
+    if (!videoId) {
+      if (/^[a-zA-Z0-9_-]{11}$/.test(url.trim())) {
+        videoId = url.trim()
+      } else {
+        videoId = fallbackId
+      }
+    }
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`
+  }
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          if (data.bgVideoUrl) {
+            setVideoUrl(getYouTubeEmbedUrl(data.bgVideoUrl))
+          } else {
+            setVideoUrl(getYouTubeEmbedUrl('ohnsL3gubkw'))
+          }
+          if (data.description) {
+            setDescription(data.description)
+          }
+        } else {
+          setVideoUrl(getYouTubeEmbedUrl('ohnsL3gubkw'))
+        }
+      })
+      .catch(() => {
+        setVideoUrl(getYouTubeEmbedUrl('ohnsL3gubkw'))
+      })
+  }, [])
 
   // 3D Curved Carousel state
   const [rotationAngle, setRotationAngle] = useState(0)
@@ -114,13 +170,15 @@ export default function HomeHero({ onExploreStudio }) {
       <section className="relative w-full h-[88vh] flex flex-col justify-center items-center text-center px-6 overflow-hidden">
         {/* Background YouTube Video Embed */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none bg-black">
-          <iframe
-            className="w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25 filter grayscale-[30%]"
-            src="https://www.youtube.com/embed/Vz36RkM-rX8?autoplay=1&mute=1&loop=1&playlist=Vz36RkM-rX8&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            tabIndex="-1"
-          ></iframe>
+          {videoUrl && (
+            <iframe
+              className="w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25 filter grayscale-[30%]"
+              src={videoUrl}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              tabIndex="-1"
+            ></iframe>
+          )}
           {/* Subtle shading overlays */}
           <div className="absolute inset-0 bg-gradient-to-b from-parchment/35 via-parchment/65 to-parchment z-1" />
           <div className="absolute inset-0 bg-radial-gradient(ellipse at center, transparent 30%, #F5F3E9 95%) z-1" />
@@ -135,7 +193,7 @@ export default function HomeHero({ onExploreStudio }) {
             Naada Brahma &bull; Composer &bull; Lyricist
           </span>
           <p className="font-body text-charcoal-light text-base md:text-lg leading-relaxed font-light max-w-xl mx-auto drop-shadow-sm">
-            Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.
+            {description}
           </p>
 
           {/* Action button to explore the 3D Studio */}

@@ -1,26 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function AboutUs() {
-  const team = [
+  const [team, setTeam] = useState([
     {
       name: 'Iydani Founder',
       role: 'Founder & CEO',
       bio: 'Visionary entrepreneur driving the integration of classic musical heritage with state-of-the-art cinematic technology.',
-      initials: 'IF'
+      initials: 'IF',
+      image: ''
     },
     {
       name: 'Dr. Hamsalekha',
       role: 'Creative Mentor & Advisory Head',
       bio: 'Naada Brahma of Kannada cinema, shaping the acoustic philosophy and artistic standards of the studio.',
-      initials: 'DH'
+      initials: 'DH',
+      image: ''
     },
     {
       name: 'Technical Director',
       role: 'Head of Sound & VFX',
       bio: 'A veteran engineer with over 15 years of experience setting up premium recording chains and virtual productions.',
-      initials: 'TD'
+      initials: 'TD',
+      image: ''
     }
-  ];
+  ]);
+
+  const [aboutText1, setAboutText1] = useState(
+    'IYDANI ENTERTAINMENT is the golden dream envisioned by Dr. Hamsalekha, He is a great visionary, musician, lyricist, artist, performer, singer, instrumentalist, composer, educationist, philanthropist, socialist, patron of literature and art, teacher and a marvelous human being.'
+  );
+
+  const [aboutText2, setAboutText2] = useState(
+    'Apart from him being always recognized with the film industry he is the visionary who dreamt of having a systematic study pattern for Indian Folk Music in India. To safeguard and promote DESI culture he endorsed Desi Notations to help learn Indian Music better. Driven by ambition, he put forth several ideas which went into creating their own record label Hamsalekha Strings & Iydani Entertainment.'
+  );
+
+  const [aboutImage, setAboutImage] = useState('/iydani_logo.png');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          if (data.aboutText1) setAboutText1(data.aboutText1);
+          if (data.aboutText2) setAboutText2(data.aboutText2);
+          if (data.aboutImage) setAboutImage(data.aboutImage);
+          if (data.team && Array.isArray(data.team) && data.team.length > 0) {
+            setTeam(data.team);
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   const values = [
     {
@@ -65,26 +94,21 @@ export default function AboutUs() {
               The Journey & Growth
             </h2>
             <p className="font-body text-charcoal-light text-sm leading-relaxed font-light">
-              Founded under the creative inspiration of the legendary composer Dr. Hamsalekha, Iydani Entertainment began as a boutique tracking suite. Over the years, we grew into a multi-disciplinary entertainment house covering film production, Dolby Atmos mixing, and virtual cyclorama studios.
+              {aboutText1}
             </p>
             <p className="font-body text-charcoal-light text-sm leading-relaxed font-light">
-              Our state-of-the-art facility in Bengaluru stands as a testament to our growth—combining acoustic rooms designed by top global consultants with high-speed digital workflows.
+              {aboutText2}
             </p>
           </div>
           
-          {/* Graphic Placeholder styled with the theme */}
-          <div className="w-full aspect-[4/3] rounded-xl bg-parchment-warm border border-wood/20 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-[radial-gradient(#2a2d34_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.03]"></div>
-            <span className="font-heading text-6xl text-wood/15 select-none font-bold">EST. 2026</span>
-            <div className="absolute inset-2 border border-wood/10 rounded-lg"></div>
-            <div className="z-10 mt-2">
-              <span className="font-body text-[10px] tracking-widest text-sage font-bold uppercase block">
-                Corporate Headquarters
-              </span>
-              <span className="font-body text-xs text-charcoal-light mt-1 block">
-                Bengaluru, India
-              </span>
-            </div>
+          {/* Company Logo and Branding */}
+          <div className="w-full aspect-[4/3] rounded-xl bg-white border border-charcoal/5 flex items-center justify-center p-6 relative overflow-hidden group shadow-xs">
+            <div className="absolute inset-0 bg-[radial-gradient(#2a2d34_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.02]"></div>
+            <img 
+              src={aboutImage} 
+              alt="Iydani Entertainment Logo" 
+              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 z-10"
+            />
           </div>
         </div>
 
@@ -153,10 +177,20 @@ export default function AboutUs() {
                 className="group bg-white border border-charcoal/5 p-6 rounded-2xl shadow-xs flex flex-col justify-between hover:border-wood/30 hover:shadow-md transition-all duration-500"
               >
                 <div className="space-y-4">
-                  {/* Photo Placeholder */}
-                  <div className="w-16 h-16 rounded-full bg-parchment-warm border border-wood/20 flex items-center justify-center font-heading text-xl text-wood-dark font-bold group-hover:scale-105 transition-transform duration-300">
-                    {member.initials}
-                  </div>
+                  {/* Photo / Placeholder */}
+                  {member.image ? (
+                    <div className="w-16 h-16 rounded-full overflow-hidden border border-wood/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                      <img 
+                        src={member.image} 
+                        alt={member.name} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-parchment-warm border border-wood/20 flex items-center justify-center font-heading text-xl text-wood-dark font-bold group-hover:scale-105 transition-transform duration-300">
+                      {member.initials}
+                    </div>
+                  )}
                   <div>
                     <h3 className="font-heading text-xl text-charcoal font-bold tracking-wide">
                       {member.name}

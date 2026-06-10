@@ -64,7 +64,7 @@ body {
 
 /* Hide default cursor on desktop browsers for custom cursor integration */
 @media (pointer: fine) {
-  body, a, button, [role="button"], select, input, textarea, canvas {
+  body, a, button, [role="button"], select, input, textarea, canvas, .cursor-pointer {
     cursor: none !important;
   }
 }

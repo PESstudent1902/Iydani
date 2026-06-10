@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function News() {
   const [news, setNews] = useState([]);
+  const [selectedArticle, setSelectedArticle] = useState(null);
 
   useEffect(() => {
     fetch('/api/news')
@@ -74,7 +75,8 @@ export default function News() {
           {news.map((item) => (
             <div 
               key={item.id} 
-              className="bg-parchment-light border border-charcoal/5 p-6 rounded-2xl flex flex-col justify-between hover:border-wood/35 hover:scale-[1.01] transition-all duration-300"
+              onClick={() => setSelectedArticle(item)}
+              className="bg-parchment-light border border-charcoal/5 p-6 rounded-2xl flex flex-col justify-between hover:border-wood/35 hover:scale-[1.01] transition-all duration-300 cursor-pointer group"
             >
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
@@ -85,6 +87,17 @@ export default function News() {
                     {item.date}
                   </span>
                 </div>
+                
+                {item.image && (
+                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-charcoal/5 relative border border-charcoal/5 group-hover:shadow-xs transition-shadow">
+                    <img 
+                      src={item.image} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
                 <h3 className="font-heading text-xl md:text-2xl text-charcoal font-bold leading-tight">
                   {item.title}
                 </h3>
@@ -96,13 +109,67 @@ export default function News() {
               {/* Graphic element for style */}
               <div className="mt-4 pt-3 border-t border-charcoal/5 flex justify-between items-center text-[10px] tracking-widest text-wood font-bold uppercase">
                 <span>Iydani News</span>
-                <span>Read &bull;</span>
+                <span className="group-hover:text-wood-dark transition-colors">Read &bull;</span>
               </div>
             </div>
           ))}
         </div>
 
       </div>
+
+      {/* Article Modal Overlay */}
+      {selectedArticle && (
+        <div className="fixed inset-0 z-[100] bg-charcoal/45 backdrop-blur-sm flex items-center justify-center p-4 md:p-6 select-text animate-fade-in">
+          <div className="bg-parchment-light border border-charcoal/10 rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative flex flex-col">
+            
+            {/* Modal Header/Sticky Nav */}
+            <div className="sticky top-0 bg-parchment-light/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-charcoal/5 z-20">
+              <span className="bg-parchment-warm text-charcoal-light font-body text-[9px] tracking-wider px-2 py-0.5 rounded uppercase font-semibold">
+                {selectedArticle.category}
+              </span>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedArticle(null);
+                }}
+                className="p-1.5 rounded-full hover:bg-charcoal/5 text-charcoal transition-colors cursor-pointer"
+                aria-label="Close article"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 md:p-8 space-y-6">
+              <div className="space-y-2">
+                <span className="font-mono text-xs text-sage-dark block">
+                  {selectedArticle.date}
+                </span>
+                <h2 className="font-heading text-2xl md:text-4xl text-charcoal font-bold leading-tight">
+                  {selectedArticle.title}
+                </h2>
+              </div>
+
+              {selectedArticle.image && (
+                <div className="w-full aspect-video rounded-2xl overflow-hidden bg-charcoal/5 border border-charcoal/5">
+                  <img 
+                    src={selectedArticle.image} 
+                    alt={selectedArticle.title} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              <p className="font-body text-charcoal text-sm leading-relaxed font-normal whitespace-pre-wrap">
+                {selectedArticle.content || selectedArticle.summary}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

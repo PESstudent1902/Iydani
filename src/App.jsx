@@ -34,7 +34,7 @@ export default function App() {
     
     if (logoClicks.current === 5) {
       logoClicks.current = 0
-      window.location.hash = '#/iy-sys-ctrl-2026'
+      window.location.hash = '#/admin'
       return
     }
     
@@ -89,10 +89,6 @@ export default function App() {
       } else if (hash.startsWith('#/privacy')) {
         setCurrentPage('privacy')
       } else if (hash.startsWith('#/admin')) {
-        // Redirect standard admin access to home to hide it
-        window.location.hash = '#/'
-        setCurrentPage('legend')
-      } else if (hash.startsWith('#/iy-sys-ctrl-2026')) {
         setCurrentPage('admin')
       } else if (hash.startsWith('#/studio') || hash.startsWith('#studio')) {
         setCurrentPage('studio')
@@ -125,7 +121,7 @@ export default function App() {
     if (page === 'legend') {
       window.location.hash = '#/'
     } else if (page === 'admin') {
-      window.location.hash = '#/iy-sys-ctrl-2026'
+      window.location.hash = '#/admin'
     } else {
       window.location.hash = `#/${page}`
     }

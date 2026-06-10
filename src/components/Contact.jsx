@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [settings, setSettings] = useState({
+    email: 'info@iyedani.com',
+    phone: '+91 74115 44427',
+    address: '2nd Floor, 1092/93, 10th C Cross, 11th Main Rd, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086'
+  });
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setSettings(prev => ({
+            ...prev,
+            email: data.email || prev.email,
+            phone: data.phone || prev.phone,
+            address: data.address || prev.address
+          }));
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,19 +88,15 @@ export default function Contact() {
               <div className="space-y-3 font-body text-xs text-charcoal-light leading-relaxed">
                 <div className="flex items-start gap-3">
                   <span className="text-wood font-semibold">Address:</span>
-                  <span>
-                    2nd Floor, 1092/93, 10th C Cross,<br />
-                    11th Main Rd, Stage 2, Mahalakshmipuram,<br />
-                    Bengaluru, Karnataka 560086
-                  </span>
+                  <span>{settings.address}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-wood font-semibold">Phone:</span>
-                  <span>+91 74115 44427</span>
+                  <span>{settings.phone}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-wood font-semibold">Email:</span>
-                  <span>info@iyedani.com</span>
+                  <span>{settings.email}</span>
                 </div>
               </div>
             </div>
