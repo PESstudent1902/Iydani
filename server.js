@@ -30,10 +30,10 @@ app.use(express.json());
 
 // Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseKey = process.env.SUPABASE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn('[WARNING] Supabase credentials (SUPABASE_URL, SUPABASE_KEY) are missing in environment!');
+  console.warn('[WARNING] Supabase credentials (SUPABASE_URL, SUPABASE_KEY / SUPABASE_SERVICE_ROLE_KEY) are missing in environment!');
 }
 
 const supabase = createClient(supabaseUrl || '', supabaseKey || '');
