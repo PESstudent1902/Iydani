@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import { Redis } from '@upstash/redis';
+import { createClient } from '@supabase/supabase-js';
 
 // Load environment variables
 dotenv.config();
@@ -28,208 +28,15 @@ const JWT_SECRET = process.env.JWT_SECRET || 'iyedani-super-secret-key-2026';
 app.use(cors());
 app.use(express.json());
 
-// Set up local fallback database path
-const dbPath = path.join(__dirname, 'db.json');
+// Initialize Supabase
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
-// Helper to initialize local DB with default values
-function initLocalDb() {
-  if (!fs.existsSync(dbPath)) {
-    const salt = bcrypt.genSaltSync(10);
-    const defaultPasswordHash = bcrypt.hashSync('admin123', salt);
-    
-    const initialData = {
-      'admin:credentials': {
-        email: 'admin@iyedani.com',
-        passwordHash: defaultPasswordHash
-      },
-      'site:settings': {
-        logoText: 'IYDANI ENTERTAINMENT',
-        tagline: 'Sound, Vision & Immersive Spaces',
-        description: 'Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.',
-        email: 'info@iyedani.com',
-        phone: '+91 74115 44427',
-        address: '2nd Floor, 1092/93, 10th C Cross, 11th Main Rd, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086',
-        youtubeUrl: 'https://www.youtube.com/@Iydani_Entertainment',
-        instagramUrl: 'https://www.instagram.com/iydanientertainment/',
-        linkedinUrl: 'https://in.linkedin.com/company/iydani-entertainment',
-        whatsappUrl: 'https://wa.me/9107411544427',
-        bgVideoUrl: 'https://www.youtube.com/embed/ohnsL3gubkw?autoplay=1&mute=1&loop=1&playlist=ohnsL3gubkw&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1',
-        aboutText1: 'IYDANI ENTERTAINMENT is the golden dream envisioned by Dr. Hamsalekha, He is a great visionary, musician, lyricist, artist, performer, singer, instrumentalist, composer, educationist, philanthropist, socialist, patron of literature and art, teacher and a marvelous human being.',
-        aboutText2: 'Apart from him being always recognized with the film industry he is the visionary who dreamt of having a systematic study pattern for Indian Folk Music in India. To safeguard and promote DESI culture he endorsed Desi Notations to help learn Indian Music better. Driven by ambition, he put forth several ideas which went into creating their own record label Hamsalekha Strings & Iydani Entertainment.',
-        aboutImage: '/iydani_logo.png',
-        team: [
-          {
-            name: 'Iydani Founder',
-            role: 'Founder & CEO',
-            bio: 'Visionary entrepreneur driving the integration of classic musical heritage with state-of-the-art cinematic technology.',
-            initials: 'IF',
-            image: ''
-          },
-          {
-            name: 'Dr. Hamsalekha',
-            role: 'Creative Mentor & Advisory Head',
-            bio: 'Naada Brahma of Kannada cinema, shaping the acoustic philosophy and artistic standards of the studio.',
-            initials: 'DH',
-            image: ''
-          },
-          {
-            name: 'Technical Director',
-            role: 'Head of Sound & VFX',
-            bio: 'A veteran engineer with over 15 years of experience setting up premium recording chains and virtual productions.',
-            initials: 'TD',
-            image: ''
-          }
-        ],
-        entertainmentServices: [
-          {
-            title: 'Film Production',
-            desc: 'End-to-end cinema production from script development and pre-visualization to filming, VFX, and theater packaging.',
-            icon: '🎬'
-          },
-          {
-            title: 'Music Production',
-            desc: 'Full songwriting, arranging, tracking, and mixing with legendary director mentorship for albums and movie soundtracks.',
-            icon: '🎵'
-          },
-          {
-            title: 'Music Distribution & Label',
-            desc: 'Seamless publishing across major streaming platforms worldwide (Spotify, Apple Music, JioSaavn) under the Iydani Audio Label.',
-            icon: '💿'
-          },
-          {
-            title: 'Artist Management',
-            desc: 'Mentoring rising vocalists and composers, booking gigs, setting up licensing deals, and guiding media careers.',
-            icon: '👑'
-          },
-          {
-            title: 'Digital Content Creation',
-            desc: 'Premium brand campaigns, high-end promotional videos, motion assets, and commercial layouts.',
-            icon: '📱'
-          }
-        ],
-        studioServices: [
-          {
-            title: 'Acoustic Tracking & Recording',
-            desc: 'Premium tracking room optimized for live drums, string ensembles, and vocal capture with Class-A analog chains.',
-            icon: '🎙️'
-          },
-          {
-            title: 'Dubbing & Dialogue Replacement',
-            desc: 'Sound-isolated ADR suites with precise timecode sync for movie and commercial language localization.',
-            icon: '🎧'
-          },
-          {
-            title: 'Cinematic Color Grading',
-            desc: 'DaVinci Resolve color-grading suite with D65 lighting and reference monitors for UHD/HDR master exports.',
-            icon: '🎨'
-          },
-          {
-            title: 'Cinema Green Screen Studio',
-            desc: 'Pre-lit cyclorama chroma key space with high-CRI panels, dolly track systems, and virtual tracking overlays.',
-            icon: '🟩'
-          },
-          {
-            title: 'Dolby Atmos Mixing & Post',
-            desc: 'Spatial audio mix room optimized for cinema standard surround mixes, audio cleanup, and sound design.',
-            icon: '🔊'
-          }
-        ]
-      },
-      'privacy-policy': '# Privacy Policy\n\nLast updated: June 09, 2026\n\nWe value your privacy. Your contact and career application submissions are securely stored and processed in compliance with modern data security practices. We do not sell or share your personal data with third parties.',
-      'news': [],
-      'releases': [
-        {
-          id: '1',
-          title: 'Premaloka Remastered',
-          artist: 'Hamsalekha',
-          genre: 'Soundtrack',
-          releaseDate: '2026-05-15',
-          image: ''
-        },
-        {
-          id: '2',
-          title: 'Agumbeya Sanje (Lofi Mix)',
-          artist: 'Various Artists',
-          genre: 'Lofi Fusion',
-          releaseDate: '2026-06-01',
-          image: ''
-        }
-      ],
-      'jobs': [
-        { id: '1', title: 'Senior Audio Engineer', department: 'Studios', type: 'Full-time', location: 'Bengaluru', description: 'Seeking a veteran recording & mixing engineer experienced with high-end analog paths.' },
-        { id: '2', title: 'VFX Compositor', department: 'Visual Production', type: 'Full-time', location: 'Bengaluru', description: 'Experienced in green screen keying, camera tracking, and Blender/Nuke.' }
-      ],
-      'submissions:contact': [],
-      'submissions:career': []
-    };
-    fs.writeFileSync(dbPath, JSON.stringify(initialData, null, 2));
-  }
-}
-initLocalDb();
-
-// Setup KV Database Client (Upstash Redis with local file fallback)
-const isRedisConfigured = !!(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
-let redis = null;
-if (isRedisConfigured) {
-  try {
-    redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    });
-    console.log('[INFO] Upstash Redis connected successfully.');
-  } catch (err) {
-    console.error('[ERROR] Failed to initialize Upstash Redis client. Falling back to local db.json.', err);
-  }
-} else {
-  console.log('[INFO] Upstash Redis not configured. Using local db.json database.');
+if (!supabaseUrl || !supabaseKey) {
+  console.warn('[WARNING] Supabase credentials (SUPABASE_URL, SUPABASE_KEY) are missing in environment!');
 }
 
-// Database helper functions
-async function dbGet(key) {
-  if (redis) {
-    const val = await redis.get(key);
-    return val;
-  } else {
-    const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-    return data[key] || null;
-  }
-}
-
-async function dbSet(key, val) {
-  if (redis) {
-    await redis.set(key, val);
-  } else {
-    const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-    data[key] = val;
-    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-  }
-}
-
-// Seed admin credentials if not set in Upstash
-async function seedRedis() {
-  if (redis) {
-    const exists = await redis.get('admin:credentials');
-    if (!exists) {
-      const salt = bcrypt.genSaltSync(10);
-      const defaultPasswordHash = bcrypt.hashSync('admin123', salt);
-      await redis.set('admin:credentials', {
-        email: 'admin@iyedani.com',
-        passwordHash: defaultPasswordHash
-      });
-      // Set settings defaults
-      const localData = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-      await redis.set('site:settings', localData['site:settings']);
-      await redis.set('privacy-policy', localData['privacy-policy']);
-      await redis.set('jobs', localData['jobs']);
-      await redis.set('news', []);
-      await redis.set('releases', []);
-      await redis.set('submissions:contact', []);
-      await redis.set('submissions:career', []);
-      console.log('[INFO] Seeded Upstash Redis with default admin credentials & settings.');
-    }
-  }
-}
-seedRedis().catch(console.error);
+const supabase = createClient(supabaseUrl || '', supabaseKey || '');
 
 // Middleware for admin verification
 function verifyAdmin(req, res, next) {
@@ -247,20 +54,9 @@ function verifyAdmin(req, res, next) {
   }
 }
 
-// Multer Local Upload configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'file-' + uniqueSuffix + ext);
-  }
-});
-
+// Multer In-Memory configuration for Supabase Storage uploads (Vercel-compatible)
 const upload = multer({ 
-  storage: storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
@@ -302,12 +98,17 @@ app.post('/api/auth/login', async (req, res) => {
   }
   
   try {
-    const creds = await dbGet('admin:credentials');
-    if (!creds || creds.email !== email) {
+    const { data: creds, error } = await supabase
+      .from('admin_credentials')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error || !creds) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
     
-    const isMatch = bcrypt.compareSync(password, creds.passwordHash);
+    const isMatch = bcrypt.compareSync(password, creds.password_hash);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
@@ -328,18 +129,71 @@ app.get('/api/auth/me', verifyAdmin, (req, res) => {
 // 2. SETTINGS
 app.get('/api/settings', async (req, res) => {
   try {
-    const settings = await dbGet('site:settings');
+    const { data, error } = await supabase
+      .from('site_settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+
+    if (error || !data) {
+      return res.status(404).json({ error: 'Settings not found.' });
+    }
+
+    const settings = {
+      logoText: data.logo_text,
+      tagline: data.tagline,
+      description: data.description,
+      email: data.email,
+      phone: data.phone,
+      address: data.address,
+      youtubeUrl: data.youtube_url,
+      instagramUrl: data.instagram_url,
+      linkedinUrl: data.linkedin_url,
+      whatsappUrl: data.whatsapp_url,
+      bgVideoUrl: data.bg_video_url,
+      aboutText1: data.about_text1,
+      aboutText2: data.about_text2,
+      aboutImage: data.about_image,
+      team: data.team || [],
+      entertainmentServices: data.entertainment_services || [],
+      studioServices: data.studio_services || []
+    };
     res.json(settings);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to retrieve settings.' });
   }
 });
 
 app.put('/api/settings', verifyAdmin, async (req, res) => {
   try {
-    await dbSet('site:settings', req.body);
+    const { error } = await supabase
+      .from('site_settings')
+      .update({
+        logo_text: req.body.logoText,
+        tagline: req.body.tagline,
+        description: req.body.description,
+        email: req.body.email,
+        phone: req.body.phone,
+        address: req.body.address,
+        youtube_url: req.body.youtubeUrl,
+        instagram_url: req.body.instagramUrl,
+        linkedin_url: req.body.linkedinUrl,
+        whatsapp_url: req.body.whatsappUrl,
+        bg_video_url: req.body.bgVideoUrl,
+        about_text1: req.body.aboutText1,
+        about_text2: req.body.aboutText2,
+        about_image: req.body.aboutImage,
+        team: req.body.team || [],
+        entertainment_services: req.body.entertainmentServices || [],
+        studio_services: req.body.studioServices || []
+      })
+      .eq('id', 1);
+
+    if (error) throw error;
     res.json({ success: true, message: 'Settings updated successfully.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to save settings.' });
   }
 });
@@ -350,28 +204,73 @@ app.post('/api/auth/change-password', verifyAdmin, async (req, res) => {
     return res.status(400).json({ error: 'Both passwords are required.' });
   }
   try {
-    const creds = await dbGet('admin:credentials');
-    const isMatch = bcrypt.compareSync(currentPassword, creds.passwordHash);
+    const { data: creds, error: fetchErr } = await supabase
+      .from('admin_credentials')
+      .select('*')
+      .eq('email', req.admin.email)
+      .single();
+
+    if (fetchErr || !creds) {
+      return res.status(404).json({ error: 'Admin account not found.' });
+    }
+
+    const isMatch = bcrypt.compareSync(currentPassword, creds.password_hash);
     if (!isMatch) {
       return res.status(400).json({ error: 'Incorrect current password.' });
     }
     
     const salt = bcrypt.genSaltSync(10);
-    creds.passwordHash = bcrypt.hashSync(newPassword, salt);
-    await dbSet('admin:credentials', creds);
+    const newPasswordHash = bcrypt.hashSync(newPassword, salt);
+    
+    const { error: updateErr } = await supabase
+      .from('admin_credentials')
+      .update({ password_hash: newPasswordHash })
+      .eq('email', req.admin.email);
+
+    if (updateErr) throw updateErr;
+
     res.json({ success: true, message: 'Password changed successfully.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to update password.' });
   }
 });
 
 // 3. FILE UPLOADS
-app.post('/api/upload', upload.single('file'), (req, res) => {
+app.post('/api/upload', upload.single('file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded.' });
   }
-  const relativePath = `/uploads/${req.file.filename}`;
-  res.json({ url: relativePath });
+
+  try {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const ext = path.extname(req.file.originalname);
+    const fileName = 'file-' + uniqueSuffix + ext;
+
+    // Upload to Supabase Storage bucket 'uploads'
+    const { data, error } = await supabase.storage
+      .from('uploads')
+      .upload(fileName, req.file.buffer, {
+        contentType: req.file.mimetype,
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('[ERROR] Supabase Storage upload failed:', error);
+      return res.status(500).json({ error: 'Failed to upload file to storage bucket.' });
+    }
+
+    // Get public URL
+    const { data: { publicUrl } } = supabase.storage
+      .from('uploads')
+      .getPublicUrl(fileName);
+
+    res.json({ url: publicUrl });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to process file upload.' });
+  }
 });
 
 // 4. SUBMISSIONS (Contact & Careers)
@@ -381,27 +280,37 @@ app.post('/api/submissions/contact', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and message are required.' });
   }
   try {
-    const subs = await dbGet('submissions:contact') || [];
-    const newSub = {
-      id: Date.now().toString(),
-      name,
-      email,
-      message,
-      createdAt: new Date().toISOString()
-    };
-    subs.unshift(newSub);
-    await dbSet('submissions:contact', subs);
+    const { error } = await supabase
+      .from('submissions_contact')
+      .insert([{ name, email, message }]);
+
+    if (error) throw error;
     res.json({ success: true, message: 'Message sent successfully.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to submit contact form.' });
   }
 });
 
 app.get('/api/submissions/contact', verifyAdmin, async (req, res) => {
   try {
-    const subs = await dbGet('submissions:contact') || [];
-    res.json(subs);
+    const { data, error } = await supabase
+      .from('submissions_contact')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const mapped = (data || []).map(item => ({
+      id: item.id,
+      name: item.name,
+      email: item.email,
+      message: item.message,
+      createdAt: item.created_at
+    }));
+    res.json(mapped);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch contact submissions.' });
   }
 });
@@ -412,29 +321,45 @@ app.post('/api/submissions/career', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and job title are required.' });
   }
   try {
-    const subs = await dbGet('submissions:career') || [];
-    const newSub = {
-      id: Date.now().toString(),
-      name,
-      email,
-      jobTitle,
-      resumeUrl: resumeUrl || '',
-      coverLetter: coverLetter || '',
-      createdAt: new Date().toISOString()
-    };
-    subs.unshift(newSub);
-    await dbSet('submissions:career', subs);
+    const { error } = await supabase
+      .from('submissions_career')
+      .insert([{
+        name,
+        email,
+        job_title: jobTitle,
+        resume_url: resumeUrl || '',
+        cover_letter: coverLetter || ''
+      }]);
+
+    if (error) throw error;
     res.json({ success: true, message: 'Application submitted successfully.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to submit career application.' });
   }
 });
 
 app.get('/api/submissions/career', verifyAdmin, async (req, res) => {
   try {
-    const subs = await dbGet('submissions:career') || [];
-    res.json(subs);
+    const { data, error } = await supabase
+      .from('submissions_career')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    const mapped = (data || []).map(item => ({
+      id: item.id,
+      name: item.name,
+      email: item.email,
+      jobTitle: item.job_title,
+      resumeUrl: item.resume_url,
+      coverLetter: item.cover_letter,
+      createdAt: item.created_at
+    }));
+    res.json(mapped);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch career applications.' });
   }
 });
@@ -442,11 +367,15 @@ app.get('/api/submissions/career', verifyAdmin, async (req, res) => {
 app.delete('/api/submissions/career/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    const subs = await dbGet('submissions:career') || [];
-    const updated = subs.filter(sub => sub.id !== id);
-    await dbSet('submissions:career', updated);
+    const { error } = await supabase
+      .from('submissions_career')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
     res.json({ success: true, message: 'Application deleted.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete application.' });
   }
 });
@@ -454,11 +383,15 @@ app.delete('/api/submissions/career/:id', verifyAdmin, async (req, res) => {
 app.delete('/api/submissions/contact/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    const subs = await dbGet('submissions:contact') || [];
-    const updated = subs.filter(sub => sub.id !== id);
-    await dbSet('submissions:contact', updated);
+    const { error } = await supabase
+      .from('submissions_contact')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
     res.json({ success: true, message: 'Inquiry deleted.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete contact inquiry.' });
   }
 });
@@ -466,18 +399,31 @@ app.delete('/api/submissions/contact/:id', verifyAdmin, async (req, res) => {
 // 5. PRIVACY POLICY
 app.get('/api/privacy-policy', async (req, res) => {
   try {
-    const policy = await dbGet('privacy-policy') || '';
-    res.json({ policy });
+    const { data, error } = await supabase
+      .from('privacy_policy')
+      .select('policy')
+      .eq('id', 1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "no rows returned"
+    res.json({ policy: data ? data.policy : '' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to load privacy policy.' });
   }
 });
 
 app.put('/api/privacy-policy', verifyAdmin, async (req, res) => {
   try {
-    await dbSet('privacy-policy', req.body.policy);
+    const { policy } = req.body;
+    const { error } = await supabase
+      .from('privacy_policy')
+      .upsert({ id: 1, policy });
+
+    if (error) throw error;
     res.json({ success: true, message: 'Privacy policy updated.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to save privacy policy.' });
   }
 });
@@ -485,40 +431,53 @@ app.put('/api/privacy-policy', verifyAdmin, async (req, res) => {
 // 6. NEWS
 app.get('/api/news', async (req, res) => {
   try {
-    const news = await dbGet('news') || [];
-    res.json(news);
+    const { data, error } = await supabase
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    res.json(data || []);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch news.' });
   }
 });
 
 app.post('/api/news', verifyAdmin, async (req, res) => {
+  const { title, summary, content, image, category } = req.body;
   try {
-    const news = await dbGet('news') || [];
-    const newItem = {
-      id: Date.now().toString(),
-      title: req.body.title,
-      summary: req.body.summary,
-      content: req.body.content,
-      image: req.body.image || '',
-      category: req.body.category || 'Announcement',
-      date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-    };
-    news.unshift(newItem);
-    await dbSet('news', news);
-    res.json(newItem);
+    const { data, error } = await supabase
+      .from('news')
+      .insert([{
+        title,
+        summary,
+        content,
+        image: image || '',
+        category: category || 'Announcement'
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to create news article.' });
   }
 });
 
 app.delete('/api/news/:id', verifyAdmin, async (req, res) => {
   try {
-    let news = await dbGet('news') || [];
-    news = news.filter(item => item.id !== req.params.id);
-    await dbSet('news', news);
+    const { error } = await supabase
+      .from('news')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (error) throw error;
     res.json({ success: true });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete news article.' });
   }
 });
@@ -526,39 +485,70 @@ app.delete('/api/news/:id', verifyAdmin, async (req, res) => {
 // 7. RELEASES (Audio Label releases)
 app.get('/api/releases', async (req, res) => {
   try {
-    const releases = await dbGet('releases') || [];
-    res.json(releases);
+    const { data, error } = await supabase
+      .from('releases')
+      .select('*');
+
+    if (error) throw error;
+
+    const mapped = (data || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      artist: item.artist,
+      genre: item.genre,
+      image: item.image,
+      releaseDate: item.release_date
+    }));
+    res.json(mapped);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch releases.' });
   }
 });
 
 app.post('/api/releases', verifyAdmin, async (req, res) => {
+  const { title, artist, genre, image, releaseDate } = req.body;
   try {
-    const releases = await dbGet('releases') || [];
-    const newRelease = {
-      id: Date.now().toString(),
-      title: req.body.title,
-      artist: req.body.artist,
-      genre: req.body.genre || 'Soundtrack',
-      image: req.body.image || '',
-      releaseDate: req.body.releaseDate || new Date().toISOString().split('T')[0]
+    const { data, error } = await supabase
+      .from('releases')
+      .insert([{
+        title,
+        artist,
+        genre: genre || 'Soundtrack',
+        image: image || '',
+        release_date: releaseDate || new Date().toISOString().split('T')[0]
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    const mapped = {
+      id: data.id,
+      title: data.title,
+      artist: data.artist,
+      genre: data.genre,
+      image: data.image,
+      releaseDate: data.release_date
     };
-    releases.unshift(newRelease);
-    await dbSet('releases', releases);
-    res.json(newRelease);
+    res.json(mapped);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to create release.' });
   }
 });
 
 app.delete('/api/releases/:id', verifyAdmin, async (req, res) => {
   try {
-    let releases = await dbGet('releases') || [];
-    releases = releases.filter(item => item.id !== req.params.id);
-    await dbSet('releases', releases);
+    const { error } = await supabase
+      .from('releases')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (error) throw error;
     res.json({ success: true });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete release.' });
   }
 });
@@ -566,39 +556,52 @@ app.delete('/api/releases/:id', verifyAdmin, async (req, res) => {
 // 8. CAREERS JOBS LIST
 app.get('/api/jobs', async (req, res) => {
   try {
-    const jobs = await dbGet('jobs') || [];
-    res.json(jobs);
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*');
+
+    if (error) throw error;
+    res.json(data || []);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch jobs.' });
   }
 });
 
 app.post('/api/jobs', verifyAdmin, async (req, res) => {
+  const { title, department, type, location, description } = req.body;
   try {
-    const jobs = await dbGet('jobs') || [];
-    const newJob = {
-      id: Date.now().toString(),
-      title: req.body.title,
-      department: req.body.department || 'Production',
-      type: req.body.type || 'Full-time',
-      location: req.body.location || 'Bengaluru',
-      description: req.body.description
-    };
-    jobs.unshift(newJob);
-    await dbSet('jobs', jobs);
-    res.json(newJob);
+    const { data, error } = await supabase
+      .from('jobs')
+      .insert([{
+        title,
+        department: department || 'Production',
+        type: type || 'Full-time',
+        location: location || 'Bengaluru',
+        description
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to create job opening.' });
   }
 });
 
 app.delete('/api/jobs/:id', verifyAdmin, async (req, res) => {
   try {
-    let jobs = await dbGet('jobs') || [];
-    jobs = jobs.filter(item => item.id !== req.params.id);
-    await dbSet('jobs', jobs);
+    const { error } = await supabase
+      .from('jobs')
+      .delete()
+      .eq('id', req.params.id);
+
+    if (error) throw error;
     res.json({ success: true });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete job opening.' });
   }
 });
