@@ -248,7 +248,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     const fileName = 'file-' + uniqueSuffix + ext;
 
     // Upload to Supabase Storage bucket 'uploads'
-    const { data, error } = await supabase.storage
+    let uploadResult = await supabase.storage
       .from('uploads')
       .upload(fileName, req.file.buffer, {
         contentType: req.file.mimetype,
@@ -256,8 +256,36 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
         upsert: false
       });
 
-    if (error) {
-      console.error('[ERROR] Supabase Storage upload failed:', error);
+    // If bucket not found, try to create it programmatically
+    if (uploadResult.error && (
+      uploadResult.error.message?.toLowerCase().includes('not found') || 
+      uploadResult.error.error?.toLowerCase().includes('not found') ||
+      uploadResult.error.statusCode === '404' ||
+      uploadResult.error.statusCode === 404 ||
+      uploadResult.error.status === 404
+    )) {
+      console.log('[INFO] Bucket "uploads" not found. Creating it programmatically...');
+      const { error: createError } = await supabase.storage.createBucket('uploads', {
+        public: true
+      });
+
+      if (createError) {
+        console.error('[ERROR] Failed to create bucket programmatically:', createError);
+        return res.status(500).json({ error: 'Storage bucket not configured and auto-creation failed.' });
+      }
+
+      // Retry upload
+      uploadResult = await supabase.storage
+        .from('uploads')
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype,
+          cacheControl: '3600',
+          upsert: false
+        });
+    }
+
+    if (uploadResult.error) {
+      console.error('[ERROR] Supabase Storage upload failed:', uploadResult.error);
       return res.status(500).json({ error: 'Failed to upload file to storage bucket.' });
     }
 
