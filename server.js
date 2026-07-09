@@ -56,24 +56,35 @@ async function getDb() {
 async function seedDatabase(dbInstance) {
   if (isSeeded) return;
   try {
-    const dbJsonPath = path.join(__dirname, 'db.json');
-    if (!fs.existsSync(dbJsonPath)) {
-      console.log('[INFO] db.json not found, skipping auto-seeding.');
-      isSeeded = true;
-      return;
+    const dbJsonPath = path.join(process.cwd(), 'db.json');
+    let dbData = null;
+    if (fs.existsSync(dbJsonPath)) {
+      dbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf8'));
+    } else {
+      console.warn('[WARNING] db.json not found at process.cwd(), using fallback admin seed.');
     }
-    const dbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf8'));
 
     // 1. Seed admin credentials
     const adminCol = dbInstance.collection('admin_credentials');
     const adminCount = await adminCol.countDocuments();
-    if (adminCount === 0 && dbData['admin:credentials']) {
-      const creds = dbData['admin:credentials'];
+    if (adminCount === 0) {
+      let email = 'admin@iyedani.com';
+      let passwordHash = '$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS'; // hash of admin123
+      if (dbData && dbData['admin:credentials']) {
+        email = dbData['admin:credentials'].email || email;
+        passwordHash = dbData['admin:credentials'].passwordHash || passwordHash;
+      }
       await adminCol.insertOne({
-        email: creds.email,
-        password_hash: creds.passwordHash
+        email: email,
+        password_hash: passwordHash
       });
       console.log('[SEED] Seeded admin_credentials collection.');
+    }
+
+    // If db.json doesn't exist, we can't seed the rest, but we keep isSeeded false so it retries if db.json appears (or true to prevent logging spam)
+    if (!dbData) {
+      isSeeded = true;
+      return;
     }
 
     // 2. Seed site settings
