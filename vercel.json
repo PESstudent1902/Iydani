@@ -1,0 +1,85 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/#/admin",
+      "permanent": false
+    },
+    {
+      "source": "/about",
+      "destination": "/#/about",
+      "permanent": false
+    },
+    {
+      "source": "/services",
+      "destination": "/#/services",
+      "permanent": false
+    },
+    {
+      "source": "/audio-label",
+      "destination": "/#/audio-label",
+      "permanent": false
+    },
+    {
+      "source": "/careers",
+      "destination": "/#/careers",
+      "permanent": false
+    },
+    {
+      "source": "/news",
+      "destination": "/#/news",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "/#/contact",
+      "permanent": false
+    },
+    {
+      "source": "/privacy",
+      "destination": "/#/privacy",
+      "permanent": false
+    },
+    {
+      "source": "/studio",
+      "destination": "/#/studio",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "index, follow" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:js|css))",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*\\.(?:png|jpg|jpeg|gif|svg|webp|ico|mp4|webm))",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }
+      ]
+    }
+  ]
+}

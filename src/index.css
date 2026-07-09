@@ -1,0 +1,480 @@
+/* Google Fonts — MUST come before tailwindcss import */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Brand Palette ── */
+  --color-parchment: #F5F3E9;
+  --color-parchment-light: #FAF9F4;
+  --color-parchment-warm: #EDE8D8;
+  --color-charcoal: #2A2D34;
+  --color-charcoal-light: #3D4149;
+  --color-charcoal-dark: #1A1C21;
+  --color-sage: #8A9A86;
+  --color-sage-light: #A3B09F;
+  --color-sage-dark: #6F7D6B;
+  --color-wood: #D4A373;
+  --color-wood-light: #E0B98F;
+  --color-wood-dark: #B8865A;
+  --color-cream: #FAF8F2;
+
+  /* ── Typography ── */
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  /* ── Spacing ── */
+  --spacing-section: 100vh;
+
+  /* ── Transitions ── */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Base custom styles to integrate smooth scrolling and prevent overscroll issues */
+html {
+  background-color: #F5F3E9;
+  color: #2A2D34;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #F5F3E9;
+  color: #2A2D34;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F3E9;
+}
+::-webkit-scrollbar-thumb {
+  background: #8A9A86;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6F7D6B;
+}
+
+/* Hide default cursor on desktop browsers for custom cursor integration */
+@media (pointer: fine) {
+  body, a, button, [role="button"], select, input, textarea, canvas, .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
+/* Custom CSS Animations for Hamsalekha Labs Page */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(25px, -35px) scale(1.06);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1.04);
+  }
+  50% {
+    transform: translate(-35px, 20px) scale(0.96);
+  }
+}
+
+@keyframes soundbar {
+  0%, 100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 18s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 22s ease-in-out infinite;
+}
+
+.animate-bar {
+  transform-origin: bottom;
+  animation: soundbar 0.9s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scrollbar Utility to Hide Horizontal Scrollbar */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Sound/Vision Sine Wave Background Animations */
+@keyframes wave-move-slow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-360px);
+  }
+}
+
+@keyframes wave-move-medium {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-400px);
+  }
+}
+
+@keyframes wave-move-fast {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-240px);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-wave-slow {
+  animation: wave-move-slow 22s linear infinite;
+}
+
+.animate-wave-medium {
+  animation: wave-move-medium 28s linear infinite;
+}
+
+.animate-wave-fast {
+  animation: wave-move-fast 16s linear infinite;
+}
+
+.animate-scale-up {
+  animation: scale-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── 3D Curved & Infinite Carousel ── */
+.carousel-stage {
+  perspective: 1600px;
+  perspective-origin: 50% 35%;
+  transform-style: preserve-3d;
+  height: 440px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  position: relative;
+  margin: 1rem auto 1.5rem auto; /* extra bottom margin to prevent overlap with controls */
+}
+
+.carousel-spinner {
+  position: relative;
+  width: 290px;
+  height: 410px;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform var(--transition-time, 0.8s) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carousel-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s ease,
+              filter 0.6s ease,
+              box-shadow 0.6s ease,
+              border-color 0.4s ease;
+  will-change: transform, opacity, filter;
+  box-shadow: 0 8px 25px -8px rgba(42, 45, 52, 0.12);
+}
+
+/* Focused card styling */
+.carousel-card-active {
+  box-shadow: 0 20px 45px -12px rgba(42, 45, 52, 0.18);
+}
+
+/* Hover effect on active card only */
+.carousel-card-hover:hover {
+  transform: rotateY(var(--card-rotate-y)) translateZ(calc(var(--card-radius) + 40px)) scale(1.04) !important;
+  box-shadow: 0 25px 55px -12px rgba(42, 45, 52, 0.25);
+  border-color: rgba(212, 163, 115, 0.45) !important;
+  z-index: 999;
+}
+
+/* Adjust size for smaller screens */
+@media (max-width: 767px) {
+  .carousel-stage {
+    height: 350px;
+    margin: 0.5rem auto 1rem auto;
+  }
+  
+  .carousel-spinner {
+    width: 230px;
+    height: 330px;
+  }
+  
+  .carousel-card-hover:hover {
+    transform: rotateY(var(--card-rotate-y)) translateZ(calc(var(--card-radius) + 25px)) scale(1.03) !important;
+    box-shadow: 0 15px 35px -10px rgba(42, 45, 52, 0.2);
+  }
+}
+
+/* ── Turntable / Stage Pedestal Base ── */
+.carousel-platform-static {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  margin-top: -300px;
+  margin-left: -300px;
+  border-radius: 50%;
+  transform: translateY(215px) rotateX(90deg);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-platform-rotating {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 580px;
+  height: 580px;
+  margin-top: -290px;
+  margin-left: -290px;
+  border-radius: 50%;
+  transform: translateY(215px) rotateX(90deg);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle, rgba(250, 249, 244, 0.08) 0%, rgba(42, 45, 52, 0.05) 70%, rgba(42, 45, 52, 0.12) 100%);
+  border: 1px solid rgba(42, 45, 52, 0.08);
+  box-shadow: inset 0 0 20px rgba(42, 45, 52, 0.05);
+}
+
+@media (max-width: 767px) {
+  .carousel-platform-static {
+    width: 440px;
+    height: 440px;
+    margin-top: -220px;
+    margin-left: -220px;
+    transform: translateY(175px) rotateX(90deg);
+  }
+  
+  .carousel-platform-rotating {
+    width: 420px;
+    height: 420px;
+    margin-top: -210px;
+    margin-left: -210px;
+    transform: translateY(175px) rotateX(90deg);
+  }
+}
+
+/* ── Dark Stage Overrides (Active on Scroll Down) ── */
+html {
+  transition: background-color 0.8s ease;
+}
+
+html.dark-bg-active,
+html.dark-bg-active body {
+  background-color: #1A1C21 !important;
+}
+
+/* Page Headers & Text in Legend Section 2 & 3 */
+html.dark-bg-active .text-charcoal {
+  color: #FAF9F4 !important;
+  transition: color 0.8s ease;
+}
+
+html.dark-bg-active .text-charcoal-light {
+  color: #EDE8D8 !important;
+  transition: color 0.8s ease;
+}
+
+html.dark-bg-active .text-wood-dark {
+  color: #E0B98F !important;
+  transition: color 0.8s ease;
+}
+
+/* Card Container Overrides */
+html.dark-bg-active .carousel-card {
+  background-color: #22252C !important;
+  border-color: rgba(250, 249, 244, 0.12) !important;
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.45);
+  transition: background-color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.dark-bg-active .carousel-card-active {
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.65), 
+              0 0 25px rgba(212, 163, 115, 0.12);
+  border-color: rgba(212, 163, 115, 0.35) !important;
+}
+
+/* Card Sub-elements */
+html.dark-bg-active .bg-parchment-warm {
+  background-color: #2D313A !important;
+  color: #EDE8D8 !important;
+  transition: background-color 0.8s ease, color 0.8s ease;
+}
+
+html.dark-bg-active .border-charcoal\/5 {
+  border-color: rgba(250, 249, 244, 0.1) !important;
+  transition: border-color 0.8s ease;
+}
+
+html.dark-bg-active .border-charcoal\/10 {
+  border-color: rgba(250, 249, 244, 0.15) !important;
+  transition: border-color 0.8s ease;
+}
+
+html.dark-bg-active .bg-white\/60 {
+  background-color: rgba(34, 37, 44, 0.6) !important;
+  transition: background-color 0.8s ease;
+}
+
+html.dark-bg-active .hover\:bg-white:hover {
+  background-color: #2D313A !important;
+}
+
+/* Card details drawer theme adaptation */
+html.dark-bg-active .bg-parchment-light {
+  background-color: #1A1C21 !important;
+  color: #FAF9F4 !important;
+  border-left-color: rgba(250, 249, 244, 0.1) !important;
+  transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+}
+
+html.dark-bg-active .bg-white {
+  background-color: #22252C !important;
+}
+
+html.dark-bg-active .hover\:bg-charcoal\/5:hover {
+  background-color: rgba(250, 249, 244, 0.08) !important;
+}
+
+html.dark-bg-active .border-charcoal\/20 {
+  border-color: rgba(250, 249, 244, 0.2) !important;
+  transition: border-color 0.8s ease;
+}
+
+html.dark-bg-active .hover\:border-charcoal:hover {
+  border-color: #FAF9F4 !important;
+}
+
+html.dark-bg-active .text-charcoal-light.opacity-60 {
+  color: #EDE8D8 !important;
+  opacity: 0.6;
+}
+
+/* Rotating pedestal overrides */
+html.dark-bg-active .carousel-platform-rotating {
+  background: radial-gradient(circle, rgba(250, 249, 244, 0.12) 0%, rgba(26, 28, 33, 0.65) 60%, rgba(18, 19, 22, 0.95) 100%) !important;
+  border-color: rgba(212, 163, 115, 0.25) !important;
+  box-shadow: inset 0 0 30px rgba(212, 163, 115, 0.15), 
+              0 15px 50px rgba(0, 0, 0, 0.6) !important;
+  transition: background 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+/* Header nav adaptations */
+html.dark-bg-active header {
+  background-color: rgba(26, 28, 33, 0.65) !important;
+  border-bottom-color: rgba(250, 249, 244, 0.08) !important;
+  transition: background-color 0.8s ease, border-color 0.8s ease;
+}
+
+html.dark-bg-active header a,
+html.dark-bg-active header button {
+  color: #FAF9F4 !important;
+  transition: color 0.8s ease;
+}
+
+html.dark-bg-active header button {
+  opacity: 0.6;
+}
+
+html.dark-bg-active header button.text-charcoal {
+  opacity: 1 !important;
+  color: #FAF9F4 !important;
+}
+
+/* Arrow controls adaptations */
+html.dark-bg-active button[aria-label="Scroll left"],
+html.dark-bg-active button[aria-label="Scroll right"] {
+  background-color: rgba(34, 37, 44, 0.6) !important;
+  border-color: rgba(250, 249, 244, 0.15) !important;
+  color: #EDE8D8 !important;
+  transition: background-color 0.8s ease, border-color 0.8s ease, color 0.8s ease;
+}
+
+html.dark-bg-active button[aria-label="Scroll left"]:hover,
+html.dark-bg-active button[aria-label="Scroll right"]:hover {
+  background-color: #22252C !important;
+  color: #D4A373 !important;
+  border-color: rgba(212, 163, 115, 0.4) !important;
+}
+
+
+
+
