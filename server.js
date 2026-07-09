@@ -28,38 +28,44 @@ const JWT_SECRET = process.env.JWT_SECRET || 'iyedani-super-secret-key-2026';
 app.use(cors());
 app.use(express.json());
 
-// Initialize MongoDB
-const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/iyedani';
-console.log('[INFO] Connecting to MongoDB...');
+// MongoDB connection pooling (serverless-friendly)
+let cachedClient = null;
+let cachedDb = null;
+let isSeeded = false;
 
-const mongoClient = new MongoClient(mongoUri);
-let db;
-
-async function connectMongo() {
-  try {
-    await mongoClient.connect();
-    db = mongoClient.db();
-    console.log('[INFO] MongoDB connected successfully.');
-    await seedDatabase();
-  } catch (err) {
-    console.error('[ERROR] Failed to connect to MongoDB:', err);
+async function getDb() {
+  const mongoUri = process.env.MONGODB_URI;
+  if (!mongoUri) {
+    throw new Error('MONGODB_URI environment variable is missing. Please configure it in your MongoDB Atlas / Vercel settings.');
   }
+  if (cachedDb) {
+    return cachedDb;
+  }
+  if (!cachedClient) {
+    console.log('[INFO] Connecting to MongoDB...');
+    cachedClient = new MongoClient(mongoUri);
+    await cachedClient.connect();
+    console.log('[INFO] MongoDB connected successfully.');
+  }
+  cachedDb = cachedClient.db();
+  await seedDatabase(cachedDb);
+  return cachedDb;
 }
 
-connectMongo();
-
 // Helper to seed database from db.json if collections are empty
-async function seedDatabase() {
+async function seedDatabase(dbInstance) {
+  if (isSeeded) return;
   try {
     const dbJsonPath = path.join(__dirname, 'db.json');
     if (!fs.existsSync(dbJsonPath)) {
       console.log('[INFO] db.json not found, skipping auto-seeding.');
+      isSeeded = true;
       return;
     }
     const dbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf8'));
 
     // 1. Seed admin credentials
-    const adminCol = db.collection('admin_credentials');
+    const adminCol = dbInstance.collection('admin_credentials');
     const adminCount = await adminCol.countDocuments();
     if (adminCount === 0 && dbData['admin:credentials']) {
       const creds = dbData['admin:credentials'];
@@ -71,7 +77,7 @@ async function seedDatabase() {
     }
 
     // 2. Seed site settings
-    const settingsCol = db.collection('site_settings');
+    const settingsCol = dbInstance.collection('site_settings');
     const settingsCount = await settingsCol.countDocuments();
     if (settingsCount === 0 && dbData['site:settings']) {
       const s = dbData['site:settings'];
@@ -101,7 +107,7 @@ async function seedDatabase() {
     }
 
     // 3. Seed privacy policy
-    const privacyCol = db.collection('privacy_policy');
+    const privacyCol = dbInstance.collection('privacy_policy');
     const privacyCount = await privacyCol.countDocuments();
     if (privacyCount === 0 && dbData['privacy-policy']) {
       await privacyCol.insertOne({
@@ -112,7 +118,7 @@ async function seedDatabase() {
     }
 
     // 4. Seed news
-    const newsCol = db.collection('news');
+    const newsCol = dbInstance.collection('news');
     const newsCount = await newsCol.countDocuments();
     if (newsCount === 0 && Array.isArray(dbData['news']) && dbData['news'].length > 0) {
       const seededNews = dbData['news'].map(item => ({
@@ -124,7 +130,7 @@ async function seedDatabase() {
     }
 
     // 5. Seed releases
-    const releasesCol = db.collection('releases');
+    const releasesCol = dbInstance.collection('releases');
     const releasesCount = await releasesCol.countDocuments();
     if (releasesCount === 0 && Array.isArray(dbData['releases']) && dbData['releases'].length > 0) {
       const seededReleases = dbData['releases'].map(item => ({
@@ -139,7 +145,7 @@ async function seedDatabase() {
     }
 
     // 6. Seed jobs
-    const jobsCol = db.collection('jobs');
+    const jobsCol = dbInstance.collection('jobs');
     const jobsCount = await jobsCol.countDocuments();
     if (jobsCount === 0 && Array.isArray(dbData['jobs']) && dbData['jobs'].length > 0) {
       await jobsCol.insertMany(dbData['jobs']);
@@ -147,20 +153,21 @@ async function seedDatabase() {
     }
 
     // 7. Submissions
-    const contactCol = db.collection('submissions_contact');
+    const contactCol = dbInstance.collection('submissions_contact');
     const contactCount = await contactCol.countDocuments();
     if (contactCount === 0 && Array.isArray(dbData['submissions:contact']) && dbData['submissions:contact'].length > 0) {
       await contactCol.insertMany(dbData['submissions:contact']);
       console.log('[SEED] Seeded submissions_contact collection.');
     }
 
-    const careerCol = db.collection('submissions_career');
+    const careerCol = dbInstance.collection('submissions_career');
     const careerCount = await careerCol.countDocuments();
     if (careerCount === 0 && Array.isArray(dbData['submissions:career']) && dbData['submissions:career'].length > 0) {
       await careerCol.insertMany(dbData['submissions:career']);
       console.log('[SEED] Seeded submissions_career collection.');
     }
 
+    isSeeded = true;
   } catch (err) {
     console.error('[ERROR] Error seeding MongoDB:', err);
   }
@@ -238,9 +245,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
   
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const creds = await db.collection('admin_credentials').findOne({ email });
 
     if (!creds) {
@@ -257,7 +262,7 @@ app.post('/api/auth/login', async (req, res) => {
     return res.json({ token, user: { email: creds.email } });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Server error during authentication.' });
+    return res.status(500).json({ error: err.message || 'Server error during authentication.' });
   }
 });
 
@@ -268,9 +273,7 @@ app.get('/api/auth/me', verifyAdmin, (req, res) => {
 // 2. SETTINGS
 app.get('/api/settings', async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('site_settings').findOne({ id: 1 });
 
     if (!data) {
@@ -301,15 +304,13 @@ app.get('/api/settings', async (req, res) => {
     res.json(settings);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to retrieve settings.' });
+    res.status(500).json({ error: err.message || 'Failed to retrieve settings.' });
   }
 });
 
 app.put('/api/settings', verifyAdmin, async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('site_settings').replaceOne(
       { id: 1 },
       {
@@ -340,7 +341,7 @@ app.put('/api/settings', verifyAdmin, async (req, res) => {
     res.json({ success: true, message: 'Settings updated successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to save settings.' });
+    res.status(500).json({ error: err.message || 'Failed to save settings.' });
   }
 });
 
@@ -350,9 +351,7 @@ app.post('/api/auth/change-password', verifyAdmin, async (req, res) => {
     return res.status(400).json({ error: 'Both passwords are required.' });
   }
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const creds = await db.collection('admin_credentials').findOne({ email: req.admin.email });
 
     if (!creds) {
@@ -375,7 +374,7 @@ app.post('/api/auth/change-password', verifyAdmin, async (req, res) => {
     res.json({ success: true, message: 'Password changed successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to update password.' });
+    res.status(500).json({ error: err.message || 'Failed to update password.' });
   }
 });
 
@@ -408,9 +407,7 @@ app.post('/api/submissions/contact', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and message are required.' });
   }
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('submissions_contact').insertOne({
       name,
       email,
@@ -420,15 +417,13 @@ app.post('/api/submissions/contact', async (req, res) => {
     res.json({ success: true, message: 'Message sent successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to submit contact form.' });
+    res.status(500).json({ error: err.message || 'Failed to submit contact form.' });
   }
 });
 
 app.get('/api/submissions/contact', verifyAdmin, async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('submissions_contact')
       .find()
       .sort({ created_at: -1 })
@@ -444,7 +439,7 @@ app.get('/api/submissions/contact', verifyAdmin, async (req, res) => {
     res.json(mapped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch contact submissions.' });
+    res.status(500).json({ error: err.message || 'Failed to fetch contact submissions.' });
   }
 });
 
@@ -454,9 +449,7 @@ app.post('/api/submissions/career', async (req, res) => {
     return res.status(400).json({ error: 'Name, email, and job title are required.' });
   }
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('submissions_career').insertOne({
       name,
       email,
@@ -468,15 +461,13 @@ app.post('/api/submissions/career', async (req, res) => {
     res.json({ success: true, message: 'Application submitted successfully.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to submit career application.' });
+    res.status(500).json({ error: err.message || 'Failed to submit career application.' });
   }
 });
 
 app.get('/api/submissions/career', verifyAdmin, async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('submissions_career')
       .find()
       .sort({ created_at: -1 })
@@ -494,57 +485,49 @@ app.get('/api/submissions/career', verifyAdmin, async (req, res) => {
     res.json(mapped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch career applications.' });
+    res.status(500).json({ error: err.message || 'Failed to fetch career applications.' });
   }
 });
 
 app.delete('/api/submissions/career/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('submissions_career').deleteOne(getQueryById(id));
     res.json({ success: true, message: 'Application deleted.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete application.' });
+    res.status(500).json({ error: err.message || 'Failed to delete application.' });
   }
 });
 
 app.delete('/api/submissions/contact/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('submissions_contact').deleteOne(getQueryById(id));
     res.json({ success: true, message: 'Inquiry deleted.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete contact inquiry.' });
+    res.status(500).json({ error: err.message || 'Failed to delete contact inquiry.' });
   }
 });
 
 // 5. PRIVACY POLICY
 app.get('/api/privacy-policy', async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('privacy_policy').findOne({ id: 1 });
     res.json({ policy: data ? data.policy : '' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to load privacy policy.' });
+    res.status(500).json({ error: err.message || 'Failed to load privacy policy.' });
   }
 });
 
 app.put('/api/privacy-policy', verifyAdmin, async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const { policy } = req.body;
     await db.collection('privacy_policy').replaceOne(
       { id: 1 },
@@ -554,16 +537,14 @@ app.put('/api/privacy-policy', verifyAdmin, async (req, res) => {
     res.json({ success: true, message: 'Privacy policy updated.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to save privacy policy.' });
+    res.status(500).json({ error: err.message || 'Failed to save privacy policy.' });
   }
 });
 
 // 6. NEWS
 app.get('/api/news', async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('news')
       .find()
       .sort({ created_at: -1 })
@@ -581,16 +562,14 @@ app.get('/api/news', async (req, res) => {
     res.json(mapped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch news.' });
+    res.status(500).json({ error: err.message || 'Failed to fetch news.' });
   }
 });
 
 app.post('/api/news', verifyAdmin, async (req, res) => {
   const { title, summary, content, image, category } = req.body;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const doc = {
       title,
       summary,
@@ -606,30 +585,26 @@ app.post('/api/news', verifyAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to create news article.' });
+    res.status(500).json({ error: err.message || 'Failed to create news article.' });
   }
 });
 
 app.delete('/api/news/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('news').deleteOne(getQueryById(id));
     res.json({ success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete news article.' });
+    res.status(500).json({ error: err.message || 'Failed to delete news article.' });
   }
 });
 
 // 7. RELEASES (Audio Label releases)
 app.get('/api/releases', async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('releases').find().toArray();
 
     const mapped = (data || []).map(item => ({
@@ -643,16 +618,14 @@ app.get('/api/releases', async (req, res) => {
     res.json(mapped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch releases.' });
+    res.status(500).json({ error: err.message || 'Failed to fetch releases.' });
   }
 });
 
 app.post('/api/releases', verifyAdmin, async (req, res) => {
   const { title, artist, genre, image, releaseDate } = req.body;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const doc = {
       title,
       artist,
@@ -671,30 +644,26 @@ app.post('/api/releases', verifyAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to create release.' });
+    res.status(500).json({ error: err.message || 'Failed to create release.' });
   }
 });
 
 app.delete('/api/releases/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('releases').deleteOne(getQueryById(id));
     res.json({ success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete release.' });
+    res.status(500).json({ error: err.message || 'Failed to delete release.' });
   }
 });
 
 // 8. CAREERS JOBS LIST
 app.get('/api/jobs', async (req, res) => {
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const data = await db.collection('jobs').find().toArray();
     const mapped = (data || []).map(item => ({
       id: item._id ? item._id.toString() : item.id,
@@ -707,16 +676,14 @@ app.get('/api/jobs', async (req, res) => {
     res.json(mapped);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to fetch jobs.' });
+    res.status(500).json({ error: err.message || 'Failed to fetch jobs.' });
   }
 });
 
 app.post('/api/jobs', verifyAdmin, async (req, res) => {
   const { title, department, type, location, description } = req.body;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     const doc = {
       title,
       department: department || 'Production',
@@ -731,21 +698,19 @@ app.post('/api/jobs', verifyAdmin, async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to create job opening.' });
+    res.status(500).json({ error: err.message || 'Failed to create job opening.' });
   }
 });
 
 app.delete('/api/jobs/:id', verifyAdmin, async (req, res) => {
   const { id } = req.params;
   try {
-    if (!db) {
-      return res.status(503).json({ error: 'Database not initialized.' });
-    }
+    const db = await getDb();
     await db.collection('jobs').deleteOne(getQueryById(id));
     res.json({ success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete job opening.' });
+    res.status(500).json({ error: err.message || 'Failed to delete job opening.' });
   }
 });
 
