@@ -72,7 +72,7 @@ async function seedDatabase(dbInstance) {
     }
 
     // 1. Seed admin credentials
-    let email = 'admin@iydani.com';
+    let email = 'iydanientertainment@gmail.com';
     let passwordHash = '$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS'; // hash of admin123
     if (dbData && dbData['admin:credentials']) {
       email = dbData['admin:credentials'].email || email;
@@ -297,8 +297,8 @@ app.get('/api/settings', async (req, res) => {
 
     // Self-healing: Correct any database entries with old spelling or address
     let needsUpdate = false;
-    if (data.email === 'info@iyedani.com') {
-      data.email = 'info@iydani.com';
+    if (data.email === 'info@iyedani.com' || data.email === 'info@iydani.com' || data.email === 'admin@iydani.com') {
+      data.email = 'iydanientertainment@gmail.com';
       needsUpdate = true;
     }
     if (data.description && data.description.includes('Iyedani')) {
@@ -314,8 +314,8 @@ app.get('/api/settings', async (req, res) => {
       needsUpdate = true;
     }
     if (data.seo_overrides) {
-      if (data.seo_overrides.seoEmail === 'info@iyedani.com') {
-        data.seo_overrides.seoEmail = 'info@iydani.com';
+      if (data.seo_overrides.seoEmail === 'info@iyedani.com' || data.seo_overrides.seoEmail === 'info@iydani.com') {
+        data.seo_overrides.seoEmail = 'iydanientertainment@gmail.com';
         needsUpdate = true;
       }
       if (data.seo_overrides.seoAddress && data.seo_overrides.seoAddress.includes('Mahalakshmipuram')) {

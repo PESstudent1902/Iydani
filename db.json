@@ -1,13 +1,13 @@
 {
   "admin:credentials": {
-    "email": "admin@iydani.com",
+    "email": "iydanientertainment@gmail.com",
     "passwordHash": "$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS"
   },
   "site:settings": {
     "logoText": "IYDANI ENTERTAINMENT",
     "tagline": "Sound, Vision & Immersive Spaces",
     "description": "Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iydani Entertainment.",
-    "email": "info@iydani.com",
+    "email": "iydanientertainment@gmail.com",
     "phone": "+91 74115 44427",
     "address": "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School",
     "youtubeUrl": "https://www.youtube.com/@Iydani_Entertainment",
@@ -103,7 +103,7 @@
     "faqItems": [],
     "seoOverrides": {
       "seoBusinessName": "Iydani Entertainment",
-      "seoEmail": "info@iydani.com",
+      "seoEmail": "iydanientertainment@gmail.com",
       "seoPhone": "+91 74115 44427",
       "seoAddress": "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School",
       "seoHours": "Mo-Sa 10:00-19:00",

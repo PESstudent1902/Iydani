@@ -549,7 +549,7 @@ export default function DOMOverlay({ catalogServices = [] }) {
               <span itemProp="name">Iydani Entertainment</span> &middot;
               <span itemProp="address"> LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064, Hamsalekha Music School</span><br />
               <a href="tel:+917411544427" itemProp="telephone" className="hover:text-wood transition-colors">+91 74115 44427</a> &middot;
-              <a href="mailto:info@iydani.com" itemProp="email" className="hover:text-wood transition-colors">info@iydani.com</a>
+              <a href="mailto:iydanientertainment@gmail.com" itemProp="email" className="hover:text-wood transition-colors">iydanientertainment@gmail.com</a>
             </address>
             <p className="font-body text-[10px] text-charcoal-light mt-1">&copy; 2026 Iydani Entertainment. All rights reserved.</p>
           </div>

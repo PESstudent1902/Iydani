@@ -56,7 +56,7 @@ const PAGE_META = {
 /* ------------------------------------------------------------------ */
 const DEFAULTS = {
   businessName: 'Iydani Entertainment',
-  email: 'info@iydani.com',
+  email: 'iydanientertainment@gmail.com',
   phone: '+91 74115 44427',
   address: {
     street: 'LIG 3rd Stage, Udaya Layout',
@@ -97,7 +97,7 @@ const STUDIO_FAQ = [
   {
     question: 'How can I book a studio session?',
     answer:
-      'You can book a session by calling us at +91 74115 44427, emailing info@iydani.com, or visiting our Contact page.',
+      'You can book a session by calling us at +91 74115 44427, emailing iydanientertainment@gmail.com, or visiting our Contact page.',
   },
   {
     question: 'What are the studio operating hours?',

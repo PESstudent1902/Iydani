@@ -15,7 +15,7 @@ export default function ChatbotWidget({ onNavigateToStudio }) {
 
   const botResponses = {
     contact: {
-      text: 'You can reach us at:\n\n📧 Email: contact@iydani.com\n📞 Phone: +91 074115 44427\n💬 WhatsApp: +91 074115 44427\n\nVisitor hours by appointment only.',
+      text: 'You can reach us at:\n\n📧 Email: iydanientertainment@gmail.com\n📞 Phone: +91 074115 44427\n💬 WhatsApp: +91 074115 44427\n\nVisitor hours by appointment only.',
       buttons: [
         { text: '💬 Chat on WhatsApp', value: 'whatsapp', external: 'https://wa.me/9107411544427' },
         { text: '⬅️ Main Menu', value: 'main' }

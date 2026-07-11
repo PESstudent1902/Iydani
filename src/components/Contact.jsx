@@ -6,7 +6,7 @@ export default function Contact() {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
   const [settings, setSettings] = useState({
-    email: 'info@iydani.com',
+    email: 'iydanientertainment@gmail.com',
     phone: '+91 74115 44427',
     address: 'LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School'
   });

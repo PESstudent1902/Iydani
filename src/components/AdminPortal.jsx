@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 export default function AdminPortal() {
   const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
   const [authorized, setAuthorized] = useState(false);
-  const [loginForm, setLoginForm] = useState({ email: 'admin@iydani.com', password: 'admin123' });
+  const [loginForm, setLoginForm] = useState({ email: 'iydanientertainment@gmail.com', password: 'admin123' });
   const [loginError, setLoginError] = useState(null);
   const [activeTab, setActiveTab] = useState('settings');
 
@@ -459,7 +459,7 @@ export default function AdminPortal() {
           </form>
           
           <div className="text-center">
-            <span className="font-body text-[9px] text-charcoal-light opacity-50 block">Default Keys: admin@iydani.com / admin123</span>
+            <span className="font-body text-[9px] text-charcoal-light opacity-50 block">Default Keys: iydanientertainment@gmail.com / admin123</span>
           </div>
         </div>
       </div>
