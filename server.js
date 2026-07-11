@@ -295,6 +295,71 @@ app.get('/api/settings', async (req, res) => {
       return res.status(404).json({ error: 'Settings not found.' });
     }
 
+    // Self-healing: Correct any database entries with old spelling or address
+    let needsUpdate = false;
+    if (data.email === 'info@iyedani.com') {
+      data.email = 'info@iydani.com';
+      needsUpdate = true;
+    }
+    if (data.description && data.description.includes('Iyedani')) {
+      data.description = data.description.replace(/Iyedani/g, 'Iydani');
+      needsUpdate = true;
+    }
+    if (data.logo_text && data.logo_text.includes('Iyedani')) {
+      data.logo_text = data.logo_text.replace(/Iyedani/g, 'Iydani');
+      needsUpdate = true;
+    }
+    if (data.address && data.address.includes('Mahalakshmipuram')) {
+      data.address = "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School";
+      needsUpdate = true;
+    }
+    if (data.seo_overrides) {
+      if (data.seo_overrides.seoEmail === 'info@iyedani.com') {
+        data.seo_overrides.seoEmail = 'info@iydani.com';
+        needsUpdate = true;
+      }
+      if (data.seo_overrides.seoAddress && data.seo_overrides.seoAddress.includes('Mahalakshmipuram')) {
+        data.seo_overrides.seoAddress = "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School";
+        needsUpdate = true;
+      }
+    }
+    if (Array.isArray(data.team)) {
+      const hamsalekha = data.team.find(m => m.name && m.name.includes('Hamsalekha'));
+      if (hamsalekha && (!hamsalekha.image || hamsalekha.image === "")) {
+        hamsalekha.image = "/hamsalekha_logo.png";
+        needsUpdate = true;
+      }
+    }
+    if (Array.isArray(data.studio_services)) {
+      const hasGraphic = data.studio_services.some(s => s.title === 'Graphic Designing');
+      if (!hasGraphic) {
+        data.studio_services.push({
+          title: 'Graphic Designing',
+          desc: 'Timeless visual branding, digital illustrations, album arts, and custom layouts tailored for entertainment and media.',
+          icon: '🎨'
+        });
+        needsUpdate = true;
+      }
+    }
+    if (!data.catalog_services || !Array.isArray(data.catalog_services) || data.catalog_services.length < 5) {
+      const dbJsonPath = path.join(process.cwd(), 'db.json');
+      if (fs.existsSync(dbJsonPath)) {
+        try {
+          const dbData = JSON.parse(fs.readFileSync(dbJsonPath, 'utf8'));
+          if (dbData['site:settings'] && dbData['site:settings'].catalogServices) {
+            data.catalog_services = dbData['site:settings'].catalogServices;
+            needsUpdate = true;
+          }
+        } catch (_) {}
+      }
+    }
+
+    if (needsUpdate) {
+      db.collection('site_settings').replaceOne({ id: 1 }, data, { upsert: true })
+        .then(() => console.log('[INFO] Database settings self-healed and updated successfully.'))
+        .catch(err => console.error('[ERROR] Self-healing DB update failed:', err));
+    }
+
     const settings = {
       logoText: data.logo_text,
       tagline: data.tagline,
