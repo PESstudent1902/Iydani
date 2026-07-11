@@ -7,7 +7,7 @@ import FAQSection from './FAQSection'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function DOMOverlay() {
+export default function DOMOverlay({ catalogServices = [] }) {
   const containerRef = useRef(null)
   const [expandedItem, setExpandedItem] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -282,7 +282,7 @@ export default function DOMOverlay() {
 
       {/* Main Sections */}
       <main className="w-full">
-        {services.map((service) => {
+        {catalogServices.map((service) => {
           const isLeft = service.imageAlign === 'left'
           return (
             <section
@@ -485,16 +485,17 @@ export default function DOMOverlay() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                   </svg>
                   <span className="leading-relaxed">
-                    2nd Floor, 1092/93, 10th C Cross,<br />
-                    11th Main Rd, Stage 2, Mahalakshmipuram,<br />
-                    Bengaluru, Karnataka 560086
+                    LIG 3rd Stage, Udaya Layout,<br />
+                    Yelahanka New Town, Bengaluru,<br />
+                    Karnataka 560064<br />
+                    Hamsalekha Music School
                   </span>
                 </div>
               </div>
 
               <div className="animate-text pt-1">
                 <a 
-                  href="https://maps.google.com/?q=Iydani+Entertainment+2nd+Floor+1092/93+10th+C+Cross+11th+Main+Rd+Stage+2+Mahalakshmipuram+Bengaluru+Karnataka+560086"
+                  href="https://maps.google.com/?q=Hamsalekha+Music+School+LIG+3rd+Stage+Udaya+Layout+Yelahanka+New+Town+Bengaluru+Karnataka+560064"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 px-6 py-3 bg-wood hover:bg-wood-dark text-[#FAF9F4] font-body text-xs tracking-widest uppercase font-semibold rounded-lg transition-all duration-300 pointer-events-auto cursor-pointer shadow-sm hover:shadow-md hover:translate-y-[-1px]"
@@ -524,7 +525,7 @@ export default function DOMOverlay() {
                 </div>
                 <h3 className="font-heading text-lg text-charcoal font-semibold">Bengaluru Head Office</h3>
                 <p className="font-body text-xs text-charcoal-light max-w-xs leading-relaxed">
-                  Located in the vibrant Mahalakshmipuram tech & design district, our production studio is optimized for professional acoustic capture and premium visuals.
+                  Located at Hamsalekha Music School in Yelahanka New Town, our production studio is optimized for professional acoustic capture and premium visuals.
                 </p>
                 <div className="text-[10px] tracking-wider text-sage uppercase font-bold font-body">
                   Visitor hours by appointment only
@@ -546,9 +547,9 @@ export default function DOMOverlay() {
             <p className="font-heading text-lg text-charcoal tracking-wider">IYDANI ENTERTAINMENT</p>
             <address className="not-italic font-body text-[10px] text-charcoal-light mt-1 leading-relaxed">
               <span itemProp="name">Iydani Entertainment</span> &middot;
-              <span itemProp="address"> 2nd Floor, 1092/93, 10th C Cross, 11th Main Road, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086</span><br />
+              <span itemProp="address"> LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064, Hamsalekha Music School</span><br />
               <a href="tel:+917411544427" itemProp="telephone" className="hover:text-wood transition-colors">+91 74115 44427</a> &middot;
-              <a href="mailto:info@iyedani.com" itemProp="email" className="hover:text-wood transition-colors">info@iyedani.com</a>
+              <a href="mailto:info@iydani.com" itemProp="email" className="hover:text-wood transition-colors">info@iydani.com</a>
             </address>
             <p className="font-body text-[10px] text-charcoal-light mt-1">&copy; 2026 Iydani Entertainment. All rights reserved.</p>
           </div>

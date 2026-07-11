@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-export default function IyedaniBackground({ currentPage }) {
+export default function IydaniBackground({ currentPage }) {
   const [isScrolledDown, setIsScrolledDown] = useState(false)
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function IyedaniBackground({ currentPage }) {
       {/* 2. Fine Background Design Grid */}
       <div className="absolute inset-0 bg-[radial-gradient(#2a2d34_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.02]"></div>
  
-      {/* 3. Rolling SVG Sound/Vision Sine Waves (linked to Iyedani) */}
+      {/* 3. Rolling SVG Sound/Vision Sine Waves (linked to Iydani) */}
       <div className={`absolute inset-0 flex flex-col justify-center w-full h-full overflow-hidden transition-opacity duration-[800ms] ${
         isScrolledDown ? 'opacity-[0.24]' : 'opacity-[0.12]'
       }`}>
@@ -106,4 +106,3 @@ export default function IyedaniBackground({ currentPage }) {
     </div>
   )
 }
-

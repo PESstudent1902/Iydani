@@ -130,7 +130,36 @@ export const services = [
       { name: 'Cyclorama Studio View', aspect: 'aspect-video', size: '1200 x 675', icon: 'camera' },
       { name: 'Camera Rig & Dolly', aspect: 'aspect-[4/3]', size: '800 x 600', icon: 'cog' },
       { name: 'Live Keying Monitor', aspect: 'aspect-square', size: '600 x 600', icon: 'video' },
-      { name: 'Overhead Lighting Grid', aspect: 'aspect-[4/3]', size: '800 x 600', icon: 'layers' }
+    ]
+  },
+  {
+    id: 'graphic-design',
+    num: '05 / Visual Identity & Art',
+    title: 'Graphic Designing',
+    description: 'Timeless visual branding, digital illustrations, album arts, and custom layouts tailored for entertainment and media. We craft stunning graphics, branding guides, and high-fidelity layouts.',
+    features: ['Brand Identity & Art', 'Album Art & Packaging', 'Social Media Layouts'],
+    imageAlign: 'left',
+    model: <DigitalCanvas />,
+    cameraPos: [0, 0, 5.6],
+    modelPos: [0, 0, 0],
+    cardLabel: '05',
+    cardSublabel: 'GRAPHIC ART',
+    image: '/graphic_design.png',
+    seoAlt: 'Professional graphic design and album art creation workspace at Iydani Entertainment studio, Bengaluru',
+    
+    // Details Page Content
+    subtitle: 'Creative Design & Brand Art',
+    longDescription1: 'We craft stunning graphics, branding guides, and high-fidelity layouts for musicians and media companies. From single art covers to comprehensive brand guidelines, our team delivers high-quality print and digital-ready graphic products.',
+    longDescription2: 'Our team uses industry-leading design suites and vector graphics programs to build scalable visual architectures that match your premium sound with stunning graphic precision.',
+    technicalSpecs: [
+      { category: 'Design Suite', items: ['Adobe Photoshop, Illustrator, and InDesign CC', 'Figma for digital interface & brand layout design', 'Wacom Intuos Pro pen tablets for illustration'] },
+      { category: 'Deliverables', items: ['Vector assets (AI, SVG, PDF)', 'High-res exports for print/digital', 'Social media asset kits'] }
+    ],
+    imagePlaceholders: [
+      { name: 'Branding Suite Workspace', aspect: 'aspect-video', size: '1200 x 675', icon: 'sliders' },
+      { name: 'Art covers', aspect: 'aspect-[4/3]', size: '800 x 600', image: '/visual_gallery_1.jpg' },
+      { name: 'Brand guidelines', aspect: 'aspect-square', size: '600 x 600', image: '/visual_gallery_2.jpg' },
+      { name: 'Digital illustration', aspect: 'aspect-[4/3]', size: '800 x 600', image: '/visual_gallery_3.jpg' }
     ]
   }
 ]

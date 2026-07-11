@@ -56,6 +56,11 @@ export default function ServicesPage() {
       title: 'Dolby Atmos Mixing & Post',
       desc: 'Spatial audio mix room optimized for cinema standard surround mixes, audio cleanup, and sound design.',
       icon: '🔊'
+    },
+    {
+      title: 'Graphic Designing',
+      desc: 'Timeless visual branding, digital illustrations, album arts, and custom layouts tailored for entertainment and media.',
+      icon: '🎨'
     }
   ]);
 

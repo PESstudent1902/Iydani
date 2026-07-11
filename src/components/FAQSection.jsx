@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const DEFAULT_FAQ_ITEMS = [
   {
     question: 'How much does recording studio time cost at Iydani Entertainment?',
-    answer: 'Our recording sessions are competitively priced based on your project scope, session duration, and required equipment. We offer hourly, half-day, and full-day packages for vocal tracking, instrument recording, and full-band sessions. Contact us at +91 74115 44427 or email info@iyedani.com for a personalized quote tailored to your project.'
+    answer: 'Our recording sessions are competitively priced based on your project scope, session duration, and required equipment. We offer hourly, half-day, and full-day packages for vocal tracking, instrument recording, and full-band sessions. Contact us at +91 74115 44427 or email info@iydani.com for a personalized quote tailored to your project.'
   },
   {
     question: 'What professional equipment does Iydani Entertainment use for music recording?',
@@ -27,11 +27,11 @@ const DEFAULT_FAQ_ITEMS = [
   },
   {
     question: 'Where is Iydani Entertainment located in Bengaluru?',
-    answer: 'Iydani Entertainment is located at 2nd Floor, 1092/93, 10th C Cross, 11th Main Road, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086, India. We are in the Mahalakshmipuram area, easily accessible from major areas of Bengaluru. Visit us by appointment.'
+    answer: 'Iydani Entertainment is located at LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064, at Hamsalekha Music School. We are easily accessible from all major areas of Bengaluru. Visit us by appointment.'
   },
   {
     question: 'Does Iydani Entertainment offer online music courses?',
-    answer: 'We are developing online learning programs to extend our music education beyond our physical studio. Contact us at info@iyedani.com to express your interest and be notified when online courses become available.'
+    answer: 'We are developing online learning programs to extend our music education beyond our physical studio. Contact us at info@iydani.com to express your interest and be notified when online courses become available.'
   },
   {
     question: 'What genres of music can I record at Iydani Entertainment?',
@@ -39,11 +39,11 @@ const DEFAULT_FAQ_ITEMS = [
   },
   {
     question: 'How do I submit a demo to the Iydani Audio Label?',
-    answer: 'To submit your music to the Iydani Audio Label (Hamsalekha Strings & Iydani Entertainment), send your demo tracks, artist bio, and contact information to info@iyedani.com. We review all submissions and will respond if your music aligns with our label direction. We distribute across Spotify, Apple Music, JioSaavn, and all major streaming platforms.'
+    answer: 'To submit your music to the Iydani Audio Label (Hamsalekha Strings & Iydani Entertainment), send your demo tracks, artist bio, and contact information to info@iydani.com. We review all submissions and will respond if your music aligns with our label direction. We distribute across Spotify, Apple Music, JioSaavn, and all major streaming platforms.'
   },
   {
     question: 'How do I book a recording session at Iydani Entertainment?',
-    answer: 'You can book a session by contacting us via WhatsApp at +91 74115 44427, calling us directly, or sending an email to info@iyedani.com. We recommend booking at least 3-5 days in advance. For large projects, early scheduling ensures availability of our premium studios.'
+    answer: 'You can book a session by contacting us via WhatsApp at +91 74115 44427, calling us directly, or sending an email to info@iydani.com. We recommend booking at least 3-5 days in advance. For large projects, early scheduling ensures availability of our premium studios.'
   },
   {
     question: 'What should I bring to a recording session?',

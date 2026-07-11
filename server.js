@@ -23,7 +23,7 @@ if (!fs.existsSync(uploadsDir)) {
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = process.env.JWT_SECRET || 'iyedani-super-secret-key-2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'iydani-super-secret-key-2026';
 
 app.use(cors());
 app.use(express.json());
@@ -72,7 +72,7 @@ async function seedDatabase(dbInstance) {
     }
 
     // 1. Seed admin credentials
-    let email = 'admin@iyedani.com';
+    let email = 'admin@iydani.com';
     let passwordHash = '$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS'; // hash of admin123
     if (dbData && dbData['admin:credentials']) {
       email = dbData['admin:credentials'].email || email;
@@ -115,6 +115,7 @@ async function seedDatabase(dbInstance) {
         entertainment_services: s.entertainmentServices || [],
         studio_services: s.studioServices || [],
         faq_items: s.faqItems || [],
+        catalog_services: s.catalogServices || [],
         seo_overrides: s.seoOverrides || {}
       });
       console.log('[SEED] Seeded site_settings collection.');
@@ -313,6 +314,7 @@ app.get('/api/settings', async (req, res) => {
       entertainmentServices: data.entertainment_services || [],
       studioServices: data.studio_services || [],
       faqItems: data.faq_items || [],
+      catalogServices: data.catalog_services || [],
       seoOverrides: data.seo_overrides || {}
     };
     res.json(settings);
@@ -347,6 +349,7 @@ app.put('/api/settings', verifyAdmin, async (req, res) => {
         entertainment_services: req.body.entertainmentServices || [],
         studio_services: req.body.studioServices || [],
         faq_items: req.body.faqItems || [],
+        catalog_services: req.body.catalogServices || [],
         seo_overrides: req.body.seoOverrides || {}
       },
       { upsert: true }

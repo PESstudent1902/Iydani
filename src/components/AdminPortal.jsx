@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 export default function AdminPortal() {
   const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
   const [authorized, setAuthorized] = useState(false);
-  const [loginForm, setLoginForm] = useState({ email: 'admin@iyedani.com', password: 'admin123' });
+  const [loginForm, setLoginForm] = useState({ email: 'admin@iydani.com', password: 'admin123' });
   const [loginError, setLoginError] = useState(null);
   const [activeTab, setActiveTab] = useState('settings');
 
   const [settings, setSettings] = useState({
     logoText: '', tagline: '', description: '', email: '', phone: '', address: '', youtubeUrl: '', instagramUrl: '', linkedinUrl: '', whatsappUrl: '', bgVideoUrl: '',
-    aboutText1: '', aboutText2: '', aboutImage: '', team: [], entertainmentServices: [], studioServices: []
+    aboutText1: '', aboutText2: '', aboutImage: '', team: [], entertainmentServices: [], studioServices: [], catalogServices: []
   });
   const [contactSubs, setContactSubs] = useState([]);
   const [careerSubs, setCareerSubs] = useState([]);
@@ -167,6 +167,22 @@ export default function AdminPortal() {
       updatedList[index] = { ...updatedList[index], [field]: value };
       return { ...prev, [listKey]: updatedList };
     });
+  };
+
+  const handleCatalogChange = (index, field, value) => {
+    setSettings(prev => {
+      const updatedCatalog = [...(prev.catalogServices || [])];
+      while (updatedCatalog.length <= index) {
+        updatedCatalog.push({ id: '', num: '', title: '', description: '', features: [], image: '', subtitle: '', longDescription1: '', longDescription2: '', technicalSpecs: [] });
+      }
+      updatedCatalog[index] = { ...updatedCatalog[index], [field]: value };
+      return { ...prev, catalogServices: updatedCatalog };
+    });
+  };
+
+  const handleCatalogFeaturesChange = (index, value) => {
+    const featuresArr = value.split(',').map(f => f.trim());
+    handleCatalogChange(index, 'features', featuresArr);
   };
 
   const addService = (category) => {
@@ -443,7 +459,7 @@ export default function AdminPortal() {
           </form>
           
           <div className="text-center">
-            <span className="font-body text-[9px] text-charcoal-light opacity-50 block">Default Keys: admin@iyedani.com / admin123</span>
+            <span className="font-body text-[9px] text-charcoal-light opacity-50 block">Default Keys: admin@iydani.com / admin123</span>
           </div>
         </div>
       </div>
@@ -696,6 +712,60 @@ export default function AdminPortal() {
                 >
                   + Add Studio & Production Service
                 </button>
+              </div>
+
+              <h2 className="font-heading text-xl text-charcoal font-bold tracking-wider border-b border-charcoal/5 pt-4 pb-2">3D Studio Catalog (5 Services)</h2>
+              <div className="space-y-4">
+                {(settings.catalogServices || []).map((service, idx) => (
+                  <div key={idx} className="bg-white/40 border border-charcoal/5 p-4 rounded-xl space-y-3 relative">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Catalog Number / Section</label>
+                        <input type="text" value={service.num || ''} onChange={e => handleCatalogChange(idx, 'num', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Title</label>
+                        <input type="text" value={service.title || ''} onChange={e => handleCatalogChange(idx, 'title', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Short Description</label>
+                      <textarea rows="2" value={service.description || ''} onChange={e => handleCatalogChange(idx, 'description', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Key Features (comma separated)</label>
+                      <input type="text" value={(service.features || []).join(', ')} onChange={e => handleCatalogFeaturesChange(idx, e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 items-center">
+                      <div className="space-y-1 col-span-2">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Service Image Path</label>
+                        <input type="text" value={service.image || ''} onChange={e => handleCatalogChange(idx, 'image', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                      </div>
+                      <div className="space-y-1 col-span-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Upload Image</label>
+                        <input type="file" onChange={e => {
+                          if (e.target.files && e.target.files[0]) {
+                            uploadFile(e.target.files[0], (url) => handleCatalogChange(idx, 'image', url));
+                          }
+                        }} className="w-full text-[10px]" />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Subtitle (Details Page)</label>
+                      <input type="text" value={service.subtitle || ''} onChange={e => handleCatalogChange(idx, 'subtitle', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Long Description Paragraph 1</label>
+                        <textarea rows="3" value={service.longDescription1 || ''} onChange={e => handleCatalogChange(idx, 'longDescription1', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-body text-[8px] uppercase tracking-wider text-charcoal-light">Long Description Paragraph 2</label>
+                        <textarea rows="3" value={service.longDescription2 || ''} onChange={e => handleCatalogChange(idx, 'longDescription2', e.target.value)} className="w-full px-2 py-1 bg-white border border-charcoal/10 rounded-md font-body text-[11px]"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <button type="submit" className="px-6 py-2.5 bg-wood text-white hover:bg-wood-dark font-body text-xs tracking-widest uppercase font-bold rounded-lg cursor-pointer transition-colors duration-300">

@@ -14,7 +14,7 @@ export default function AboutUs() {
       role: 'Creative Mentor & Advisory Head',
       bio: 'Naada Brahma of Kannada cinema, shaping the acoustic philosophy and artistic standards of the studio.',
       initials: 'DH',
-      image: ''
+      image: '/hamsalekha_logo.png'
     },
     {
       name: 'Technical Director',

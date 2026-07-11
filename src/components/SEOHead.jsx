@@ -56,14 +56,14 @@ const PAGE_META = {
 /* ------------------------------------------------------------------ */
 const DEFAULTS = {
   businessName: 'Iydani Entertainment',
-  email: 'info@iyedani.com',
+  email: 'info@iydani.com',
   phone: '+91 74115 44427',
   address: {
-    street: '2nd Floor, 1092/93, 10th C Cross, 11th Main Road, Stage 2',
-    locality: 'Mahalakshmipuram',
+    street: 'LIG 3rd Stage, Udaya Layout',
+    locality: 'Yelahanka New Town',
     city: 'Bengaluru',
     state: 'Karnataka',
-    zip: '560086',
+    zip: '560064',
     country: 'IN',
   },
   hours: 'Mo-Sa 10:00-19:00',
@@ -92,12 +92,12 @@ const STUDIO_FAQ = [
   {
     question: 'Where is Iydani Entertainment located?',
     answer:
-      'Our studio is located on the 2nd Floor, 1092/93, 10th C Cross, 11th Main Road, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086.',
+      'Our studio is located at LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064, at Hamsalekha Music School.',
   },
   {
     question: 'How can I book a studio session?',
     answer:
-      'You can book a session by calling us at +91 74115 44427, emailing info@iyedani.com, or visiting our Contact page.',
+      'You can book a session by calling us at +91 74115 44427, emailing info@iydani.com, or visiting our Contact page.',
   },
   {
     question: 'What are the studio operating hours?',

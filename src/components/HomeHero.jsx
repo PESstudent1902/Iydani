@@ -7,7 +7,7 @@ export default function HomeHero({ onExploreStudio }) {
   const [selectedWork, setSelectedWork] = useState(null)
   const [hoveredCard, setHoveredCard] = useState(null)
   const [videoUrl, setVideoUrl] = useState('')
-  const [description, setDescription] = useState('Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.')
+  const [description, setDescription] = useState('Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iydani Entertainment.')
 
   // Helper to parse YouTube URLs into direct loop-ready embeds
   const getYouTubeEmbedUrl = (url) => {
@@ -583,7 +583,7 @@ export default function HomeHero({ onExploreStudio }) {
           <span className="font-body text-4xl text-wood opacity-50 block leading-none select-none">“</span>
           
           <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl text-charcoal font-light leading-snug tracking-wide italic max-w-3xl mx-auto">
-            "Music is not just sound; it is the Naada—the ultimate expression of our culture, our language, and our land."
+            "Music can heal the world and evade wars"
           </h3>
           
           <div className="space-y-1 pt-4">

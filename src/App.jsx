@@ -3,7 +3,7 @@ import DOMOverlay from './components/DOMOverlay'
 import ServiceDetail from './components/ServiceDetail'
 import CustomCursor from './components/CustomCursor'
 import HomeHero from './components/HomeHero'
-import IyedaniBackground from './components/IyedaniBackground'
+import IydaniBackground from './components/IydaniBackground'
 import ChatbotWidget from './components/ChatbotWidget'
 import SEOHead from './components/SEOHead'
 import { services } from './data/services'
@@ -49,6 +49,26 @@ export default function App() {
     }
   }
 
+  const [catalogServices, setCatalogServices] = useState(services)
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.catalogServices && Array.isArray(data.catalogServices) && data.catalogServices.length > 0) {
+          const merged = data.catalogServices.map(s => {
+            const staticS = services.find(item => item.id === s.id) || {};
+            return {
+              ...staticS,
+              ...s
+            };
+          });
+          setCatalogServices(merged);
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   // Listen to hash URL changes for client-side routing
   useEffect(() => {
     const handleHashChange = () => {
@@ -60,7 +80,7 @@ export default function App() {
         const id = detailMatch[1]
         
 
-        const found = services.find(s => s.id === id)
+        const found = catalogServices.find(s => s.id === id)
         if (found) {
           setCurrentPage('studio')
           setActiveService(found)
@@ -146,7 +166,7 @@ export default function App() {
       <SEOHead currentPage={currentPage} />
 
       {/* Sound & Vision Themed Global Animated Background */}
-      <IyedaniBackground currentPage={currentPage} />
+      <IydaniBackground currentPage={currentPage} />
 
       {/* Premium custom mouse follower */}
       <CustomCursor />
@@ -221,7 +241,7 @@ export default function App() {
 
       {/* Page Content Selection */}
       {currentPage === 'legend' && <HomeHero onExploreStudio={() => handlePageChange('studio')} />}
-      {currentPage === 'studio' && <DOMOverlay />}
+      {currentPage === 'studio' && <DOMOverlay catalogServices={catalogServices} />}
       {currentPage === 'about' && <AboutUs />}
       {currentPage === 'services' && <ServicesPage />}
       {currentPage === 'audio-label' && <AudioLabel />}

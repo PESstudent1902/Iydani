@@ -1,15 +1,15 @@
 {
   "admin:credentials": {
-    "email": "admin@iyedani.com",
+    "email": "admin@iydani.com",
     "passwordHash": "$2b$10$FNFl8mtoGM8XPZe73RDt1e.xxT0e.bSNYHOYVOOheUPrUvwPOCNfS"
   },
   "site:settings": {
     "logoText": "IYDANI ENTERTAINMENT",
     "tagline": "Sound, Vision & Immersive Spaces",
-    "description": "Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iyedani Entertainment.",
-    "email": "info@iyedani.com",
+    "description": "Revolutionizing the cadence of Kannada cinema. His artistic vision serves as the foundation for the acoustic layout, tracking spaces, and color design of Iydani Entertainment.",
+    "email": "info@iydani.com",
     "phone": "+91 74115 44427",
-    "address": "2nd Floor, 1092/93, 10th C Cross, 11th Main Rd, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086",
+    "address": "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School",
     "youtubeUrl": "https://www.youtube.com/@Iydani_Entertainment",
     "instagramUrl": "https://www.instagram.com/iydanientertainment/",
     "linkedinUrl": "https://in.linkedin.com/company/iydani-entertainment",
@@ -31,7 +31,7 @@
         "role": "Creative Mentor & Advisory Head",
         "bio": "Naada Brahma of Kannada cinema, shaping the acoustic philosophy and artistic standards of the studio.",
         "initials": "DH",
-        "image": ""
+        "image": "/hamsalekha_logo.png"
       },
       {
         "name": "Technical Director",
@@ -93,20 +93,106 @@
         "title": "Dolby Atmos Mixing & Post",
         "desc": "Spatial audio mix room optimized for cinema standard surround mixes, audio cleanup, and sound design.",
         "icon": "🔊"
+      },
+      {
+        "title": "Graphic Designing",
+        "desc": "Timeless visual branding, digital illustrations, album arts, and custom layouts tailored for entertainment and media.",
+        "icon": "🎨"
       }
     ],
     "faqItems": [],
     "seoOverrides": {
       "seoBusinessName": "Iydani Entertainment",
-      "seoEmail": "info@iyedani.com",
+      "seoEmail": "info@iydani.com",
       "seoPhone": "+91 74115 44427",
-      "seoAddress": "2nd Floor, 1092/93, 10th C Cross, 11th Main Road, Stage 2, Mahalakshmipuram, Bengaluru, Karnataka 560086",
+      "seoAddress": "LIG 3rd Stage, Udaya Layout, Yelahanka New Town, Bengaluru, Karnataka 560064\nHamsalekha Music School",
       "seoHours": "Mo-Sa 10:00-19:00",
       "seoPriceRange": "₹₹",
       "seoWebsiteUrl": "https://www.iydani.com",
       "seoGeoLat": "12.9972",
       "seoGeoLng": "77.5458"
-    }
+    },
+    "catalogServices": [
+      {
+        "id": "visuals",
+        "num": "01 / Commercial Grading",
+        "title": "Visual Content & Image Editing",
+        "description": "High-end commercial color grading, graphic design, and brand asset generation. We translate artistic ideas into compelling visual campaigns, matching premium sound with stunning graphic precision.",
+        "features": ["Commercial Color Grading", "Digital Stylus Illustration", "Brand Layout & Assets"],
+        "image": "/visual_editing.jpg",
+        "subtitle": "Commercial Color Grading & Layout Design",
+        "longDescription1": "Premium audio deserves matching visual representation. Our graphic design and visual grading suite works in tandem with our audio production, crafting stunning brand layouts, promotional materials, and commercial color grading that brings digital illustrations and video content to life.",
+        "longDescription2": "We assist artists and brands in building cohesive visual languages. From single-artwork and vinyl packaging layout to digital branding campaigns and promotional assets, we focus on layout, typography, and color theory to deliver premium, stand-out designs.",
+        "technicalSpecs": [
+          { "category": "Grading Suite", "items": ["Color-controlled workspace with D65 neutral lighting", "DaVinci Resolve Studio with physical grading panel", "Eizo ColorEdge hardware-calibrated reference monitors"] },
+          { "category": "Design Suite", "items": ["Adobe Photoshop, Illustrator, and InDesign CC", "Figma for digital interface & brand layout design", "Wacom Intuos Pro pen tablets for illustration"] },
+          { "category": "Deliverables", "items": ["Ultra-HD master files in Rec.709, DCI-P3, and HDR", "Print-ready packaging formats (CMYK / Pantone)", "Optimized social media asset kits"] }
+        ]
+      },
+      {
+        "id": "recording",
+        "num": "02 / Pristine Sound Capture",
+        "title": "Professional Music Recording",
+        "description": "State-of-the-art acoustic design meets premium vintage and modern hardware. We provide a tailored recording environment optimized for vocals, solo instruments, and full ensembles, capturing every nuance with absolute clarity.",
+        "features": ["Acoustically Tuned Rooms", "High-End Analog Signal Path", "Class-A Preamps & Mics"],
+        "image": "/music_recording.jpg",
+        "subtitle": "High-End Studio Tracking & Acoustic Spaces",
+        "longDescription1": "Our flagship tracking rooms are built around acoustics that balance liveliness and control. We believe that capturing the perfect performance requires a space that inspires the performer and a signal path that retains every harmonic detail. Our live room boasts vaulted ceilings and custom-tuned diffusion, while our vocal booth offers absolute isolation for clean, pristine tracks.",
+        "longDescription2": "From modern pop vocals to complex acoustic ensemble recordings, we tailor the signal chain specifically to the source. Vintage tube microphones, premium solid-state outboard compressors, and class-A conversion ensure your recording stands the test of time, needing minimal processing to sit perfectly in a professional mix.",
+        "technicalSpecs": [
+          { "category": "Studio Space", "items": ["35ft x 24ft Live Room with 15ft vaulted ceilings", "Variable acoustic wood paneling & bass trapping", "Private artist lounge & dedicated machine room"] },
+          { "category": "Analog Signal Path", "items": ["Neve 1073 and SSL Alpha VHD microphone preamps", "Universal Audio & Tube-Tech outboard compressors", "Antelope Audio Orion 32HD converters (192kHz)"] },
+          { "category": "Microphone Locker", "items": ["Neumann U87 Ai condenser microphone", "Coles 4038 ribbon microphones (matched pair)", "Shure SM7B, AKG C414 XLS, and Sennheiser MD421"] }
+        ]
+      },
+      {
+        "id": "dubbing",
+        "num": "03 / Precise Post-Production",
+        "title": "Music Editing & Audio Dubbing",
+        "description": "Flawless multi-track alignment, dialogue replacement (ADR), and cinematic audio post-production. Our engineering workflow guarantees pristine alignment, noise restoration, and seamless dubbing for global distribution.",
+        "features": ["ADR / Dialogue Matching", "Noise Restoration & Cleanup", "Multi-Track DAW Workflows"],
+        "image": "/control_room.jpg",
+        "subtitle": "Cinematic Post-Production & Dialogue Integration",
+        "longDescription1": "In the modern production pipeline, precision editing is where raw performances become master-class releases. We specialize in seamless dialogue replacement (ADR), vocal tuning, and detailed multi-track alignment that retains the natural feel and dynamics of the original performance.",
+        "longDescription2": "Using industry-leading spectral editing and restoration software, we clean up compromised files, remove background hums, and level out uneven audio. Our engineers are trained in the art of ADR matching, ensuring that studio-recorded dialogue sounds perfectly integrated into the visual environment.",
+        "technicalSpecs": [
+          { "category": "Editing Suite", "items": ["Acoustically deadened ADR recording booth", "Precise synchronization hardware with LTC timecode", "Stereo and 5.1 surround sound monitor configuration"] },
+          { "category": "Software & Tools", "items": ["Avid Pro Tools Ultimate & Apple Logic Pro", "iZotope RX Advanced spectral restoration suite", "Synchro Arts Revoice Pro for alignment & tuning"] },
+          { "category": "Monitoring", "items": ["Genelec 8040B active nearfield monitors", "SubPac tactile bass monitoring system", "Beyerdynamic DT 990 Pro reference headphones"] }
+        ]
+      },
+      {
+        "id": "greenscreen",
+        "num": "04 / Immersive VFX Spaces",
+        "title": "Cinema Green Screen Room",
+        "description": "A dedicated chroma-key green screen room for VFX shoots, music videos, and virtual production. Features pre-lit cyclorama walls and premium camera rigs for seamless post-production integration.",
+        "features": ["Pre-Lit Cyclorama Space", "VFX Chroma-Key Optimization", "Camera Rig Integration"],
+        "image": "/green_screen.png",
+        "subtitle": "Virtual Production & Seamless VFX Environments",
+        "longDescription1": "Our cyclorama green screen space is built specifically for virtual productions, high-end commercial VFX shoots, and music videos. The room features a seamless U-shaped green screen wall that is pre-lit with high-CRI soft lights to ensure clean, shadowless chroma-key keys.",
+        "longDescription2": "Designed to handle complex camera tracking and high-frame-rate filming, the studio has isolated power grids, soundproofing, and full camera rig integration. This allows visual effects artists to easily composite scenes with pixel-perfect accuracy during post-production.",
+        "technicalSpecs": [
+          { "category": "Chroma Cyclorama", "items": ["24ft Wide x 20ft Deep x 12ft High U-shaped wall", "Seamless corner construction for infinite depth", "Heavy soundproofing for simultaneous audio recording"] },
+          { "category": "Lighting & Rigging", "items": ["DMX-controlled overhead LED soft panels (high-CRI)", "Arri Skypanels and Aputure studio spotlights available", "Isolated 100A 3-phase clean power distribution"] },
+          { "category": "Camera & Support", "items": ["DJI Ronin 2 and heavy-duty dolly tracking system", "Teradek wireless video monitoring kits", "High-speed wireless network for raw file offloads"] }
+        ]
+      },
+      {
+        "id": "graphic-design",
+        "num": "05 / Visual Identity & Art",
+        "title": "Graphic Designing",
+        "description": "Timeless visual branding, digital illustrations, album arts, and custom layouts tailored for entertainment and media. We craft stunning graphics, branding guides, and high-fidelity layouts.",
+        "features": ["Brand Identity & Art", "Album Art & Packaging", "Social Media Layouts"],
+        "image": "/graphic_design.png",
+        "subtitle": "Creative Design & Brand Art",
+        "longDescription1": "We craft stunning graphics, branding guides, and high-fidelity layouts for musicians and media companies. From single art covers to comprehensive brand guidelines, our team delivers high-quality print and digital-ready graphic products.",
+        "longDescription2": "Our team uses industry-leading design suites and vector graphics programs to build scalable visual architectures that match your premium sound with stunning graphic precision.",
+        "technicalSpecs": [
+          { "category": "Design Suite", "items": ["Adobe Photoshop, Illustrator, and InDesign CC", "Figma for digital interface & brand layout design", "Wacom Intuos Pro pen tablets for illustration"] },
+          { "category": "Deliverables", "items": ["Vector assets (AI, SVG, PDF)", "High-res exports for print/digital", "Social media asset kits"] }
+        ]
+      }
+    ]
   },
   "privacy-policy": "# Privacy Policy\n\nLast updated: June 09, 2026\n\nWe value your privacy. Your contact and career application submissions are securely stored and processed in compliance with modern data security practices. We do not sell or share your personal data with third parties.",
   "news": [],
